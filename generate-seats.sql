@@ -35,7 +35,7 @@ begin
 
 	/* Create a table of dates */
 	DROP TEMPORARY TABLE IF EXISTS dates;
-	CREATE TEMPORARY TABLE DATES ( dates date );
+	CREATE TEMPORARY TABLE dates ( dates date );
 	WHILE curdate <= end_date DO
 		INSERT INTO dates (dates) VALUES (curdate);
 		SET curdate = DATE_ADD(curdate, INTERVAL 1 DAY);
