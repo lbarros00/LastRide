@@ -1,7 +1,7 @@
 /* Table Definitions: {{{ *********************************/
+
 /* train_id is foreign keys to train id */
 /* segment_id is foreign keys to segment id */
-
 CREATE TABLE trains (
 	train_id INT PRIMARY KEY AUTO_INCREMENT,
 	train_start INT NOT NULL,
@@ -18,7 +18,8 @@ CREATE TABLE stations (
 	station_symbol CHAR(3) NOT NULL
 	);
 
-/* Stores information on registered passengers. */
+/* Stores information on registered passengers. Not all passengers are
+ * necessarily registered. */
 CREATE TABLE passengers (
 	passenger_id INT PRIMARY KEY AUTO_INCREMENT, 
 	/* age INT, */
@@ -43,6 +44,11 @@ CREATE TABLE segments (
 /* reservation_id is foreign keys to reservation_id */
 /* round_trip is foreign keys to trip_id */
 
+/* Each of these essentially represents a ticket. The passenger id,
+ * because to allow bulk ordering of a ticket, we can't actually tie a
+ * ticket to a passenger without having them all be registered. Ordering
+ * several tickets at a time doesn't work with a system where every
+ * passenger is registered. */
 CREATE TABLE trips (
 	trip_id INT PRIMARY KEY AUTO_INCREMENT,
 	trip_date DATE NOT NULL,
@@ -55,6 +61,8 @@ CREATE TABLE trips (
 	reservation_id INT NOT NULL
 	);
 
+/* Represents the different discounts for different people that can buy
+ * tickets. We're using fare types so that updates are easier. */
 create table fare_types (
 	fare_id INT PRIMARY KEY AUTO_INCREMENT,
 	fare_name varchar(20),
@@ -75,9 +83,8 @@ CREATE TABLE stops_at (
 	time_out TIME
 	);
 
-/* Number of passengers should probably be in a view or something. Having
- * that data available here is duplicating data. */
-
+/* Represents the ordering of tickets. Holds the information for payment,
+ * and the person who pays. */
 CREATE TABLE reservations (
 	reservation_id INT PRIMARY KEY AUTO_INCREMENT,
 	paying_passenger_id INT NOT NULL,
@@ -89,7 +96,7 @@ CREATE TABLE reservations (
 
 /* Data: {{{ **********************************************/
 
-/* Passengers Data: {{{{ **********************************/
+/* Passengers Data: {{{ ***********************************/
 
 INSERT INTO passengers
 	(fname, lname, email, password,
@@ -125,7 +132,8 @@ INSERT INTO passengers
 	('Berniece', 'Bahringer',
 		'Lila_Windler27@hotmail.com', 'yJVW4TlTN8AgHDt', '4040347550819945',
 		'747 Terry Fort, South Mervinchester, NJ, 58722-4878');
-	/* }}} ****************************************************/
+
+/* }}} ****************************************************/
 
 /* Fare Types: {{{ ****************************************/
 
@@ -176,40 +184,40 @@ INSERT INTO trains
 	VALUES 
 
 	/* These are the M-F Southbound towards DC */
-	(1,1,32,0,0),
-	(2,1,32,0,0),
-	(3,1,32,0,0),
-	(4,1,32,0,0),
-	(5,1,32,0,0),
-	(6,1,32,0,0),
-	(7,1,32,0,0),
-	(8,1,32,0,0),
+	(1,1,25,0,0),
+	(2,1,25,0,0),
+	(3,1,25,0,0),
+	(4,1,25,0,0),
+	(5,1,25,0,0),
+	(6,1,25,0,0),
+	(7,1,25,0,0),
+	(8,1,25,0,0),
 
 	/* These are the M-F Northbound towards Boston */
-	(9,1,32,1,0),
-	(10,1,32,1,0),
-	(11,1,32,1,0),
-	(12,1,32,1,0),
-	(13,1,32,1,0),
-	(14,1,32,1,0),
-	(15,1,32,1,0),
-	(16,1,32,1,0),
+	(9,1,25,1,0),
+	(10,1,25,1,0),
+	(11,1,25,1,0),
+	(12,1,25,1,0),
+	(13,1,25,1,0),
+	(14,1,25,1,0),
+	(15,1,25,1,0),
+	(16,1,25,1,0),
 
 	/* These are the SaSu Southbound towards DC */
-	(17,1,32,0,1),
-	(18,1,32,0,1),
-	(19,1,32,0,1),
-	(20,1,32,0,1),
-	(21,1,32,0,1),
-	(22,1,32,0,1),
+	(17,1,25,0,1),
+	(18,1,25,0,1),
+	(19,1,25,0,1),
+	(20,1,25,0,1),
+	(21,1,25,0,1),
+	(22,1,25,0,1),
 
 	/* These are the SaSu Northbound toward Boston */
-	(23,1,32,1,1),
-	(24,1,32,1,1),
-	(25,1,32,1,1),
-	(26,1,32,1,1),
-	(27,1,32,1,1),
-	(28,1,32,1,1);
+	(23,1,25,1,1),
+	(24,1,25,1,1),
+	(25,1,25,1,1),
+	(26,1,25,1,1),
+	(27,1,25,1,1),
+	(28,1,25,1,1);
 
 /* }}} ****************************************************/
 
