@@ -21,12 +21,12 @@ BEGIN
 		SET end_station = 25;
 	END IF;
 
-	IF start_station < 0 THEN
-		SET start_station = 0;
+	IF start_station < 1 THEN
+		SET start_station = 1;
 	END IF; 
 
-	IF end_station < 0 THEN
-		SET end_station = 0;
+	IF end_station < 1 THEN
+		SET end_station = 1;
 	END IF;
 
 	SET base_fare = 0.00;
