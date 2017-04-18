@@ -43,6 +43,10 @@ BEGIN
 
 
 			SET free_seats_left = (SELECT freeseat FROM seats_free WHERE (f_train_id = train_id AND segment_cursor = segment_id AND f_seat_free_date = seat_free_date )) - quantity;
+				IF free_seats_left < 0 THEN
+					SET free_seats_left = 0;
+				END IF;
+
 			UPDATE seats_free SET freeseat = free_seats_left WHERE (f_train_id = train_id AND segment_cursor = segment_id AND f_seat_free_date = seat_free_date );
 			SET segment_cursor = segment_cursor + 1;
 
@@ -53,6 +57,9 @@ BEGIN
 		segmentloop2: WHILE segment_cursor >= end_segment DO
 
 			SET free_seats_left = (SELECT freeseat FROM seats_free WHERE (f_train_id = train_id AND segment_cursor = segment_id AND f_seat_free_date = seat_free_date )) - quantity;
+			IF free_seats_left < 0 THEN
+					SET free_seats_left = 0;
+			END IF;
 			UPDATE seats_free SET freeseat = free_seats_left WHERE (f_train_id = train_id AND segment_cursor = segment_id AND f_seat_free_date = seat_free_date );
 			SET segment_cursor = segment_cursor - 1;
 			
