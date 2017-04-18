@@ -12,11 +12,13 @@
 /* segments     : trips, seats referred to segments */
 /* stations     : trains, segments, stops referred to stations */
 
-DELIMITER //
+
 
 drop procedure if exists drop_tables;
+DELIMITER //
 create procedure drop_tables()
 begin
+    SET FOREIGN_KEY_CHECKS = 0; #Technically bad practice
 	drop table if exists 
     trips,
     seats_free,
@@ -27,8 +29,7 @@ begin
     trains,
     segments,
     stations;
+    SET FOREIGN_KEY_CHECKS = 1;
 end//
 
 DELIMITER ;
-
-
