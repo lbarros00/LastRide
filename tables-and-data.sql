@@ -87,7 +87,7 @@ CREATE TABLE stops_at (
  * and the person who pays. */
 CREATE TABLE reservations (
 	reservation_id INT PRIMARY KEY AUTO_INCREMENT,
-	reservation_date DATE,
+	reservation_date DATETIME,
 	paying_passenger_id INT NOT NULL,
 	card_number varchar(16),
 	billing_address varchar(100)
