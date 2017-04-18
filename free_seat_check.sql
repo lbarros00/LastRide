@@ -6,7 +6,7 @@ RETURNS BOOLEAN
 
 BEGIN
 
-	# start_station is the starting station, end_station is the ending station
+	# start_segment is the starting segment, end_segment is the ending segment
 	# quantity is the number of people we are checking for.
 
 	DECLARE free_seat_bool BOOLEAN;
