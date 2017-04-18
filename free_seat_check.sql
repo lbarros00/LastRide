@@ -56,7 +56,7 @@ BEGIN
 
 	ELSE
 
-		segmentloop2: WHILE segment_cursor > end_segment DO
+		segmentloop2: WHILE segment_cursor >= end_segment DO
 
 			SET free_seats_left = (SELECT freeseat FROM seats_free WHERE (f_train_id = train_id AND segment_cursor = segment_id AND f_seat_free_date = seat_free_date ));
 				
