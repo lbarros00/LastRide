@@ -8,7 +8,7 @@ CREATE TABLE trains (
 	train_end INT NOT NULL,
 	/* train_direction 0 is south, 1 is north */
 	train_direction tinyint(1),
-	/* 0 is a weekday train, 1 is a weekend train */
+	/* 1 is a weekday train, 0 is a weekend train */
 	train_days boolean
 	);
 
