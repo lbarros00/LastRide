@@ -51,9 +51,13 @@ begin
 				AND 
 				se.seg_s_end BETWEEN tr.train_start AND tr.train_end
 			JOIN dates d ON
+				(is_weekday(d.dates) AND  tr.train_days)
+				OR
+				( is_weekday(d.dates) AND tr.train_days)
+/*
 				(is_weekday(d.dates) AND NOT tr.train_days)
 				OR
-				(NOT is_weekday(d.dates) AND tr.train_days)
+				(NOT is_weekday(d.dates) AND tr.train_days)*/ #Original; changed by TQ on 2017-04-19
 			;
 
 	DROP TEMPORARY TABLE IF EXISTS dates;
