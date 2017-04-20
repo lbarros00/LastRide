@@ -31,6 +31,21 @@ BEGIN
 		 call free_seat_decrement(f_train_id, f_trip_date, f_trip_seg_start, f_trip_seg_ends, quantity); #decrease number of free seats
 
 
+		 IF (f_card_number IS NULL OR f_card_number = '') THEN
+
+		 	SET f_card_number = (SELECT preferred_card_number from passengers WHERE passenger_id = f_paying_passenger_id);
+
+		 END IF;
+
+		 IF (f_billing_address IS NULL OR f_billing_address = '') THEN
+
+		 	SET f_billing_address = (SELECT preferred_billing_address from passengers WHERE passenger_id = f_paying_passenger_id);
+
+		 END IF;
+
+
+
+
 		 #Create reservation first as it becomes a foreign key to trips
 		 INSERT INTO reservations (
 		 	reservation_date,	paying_passenger_id,	card_number,	billing_address)
