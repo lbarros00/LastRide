@@ -1,5 +1,27 @@
+DROP FUNCTION IF EXISTS find_dest_arr_time;
+DROP FUNCTION IF EXISTS find_station_name;
 DROP PROCEDURE IF EXISTS show_trains;
+
+
+
 DELIMITER //
+
+CREATE FUNCTION find_dest_arr_time(f_train_id INT,f_station_id INT)
+	RETURNS TIME
+BEGIN
+	DECLARE arrival_time TIME;
+	SET arrival_time = (SELECT time_in from stops_at WHERE train_id = f_train_id AND f_station_id = station_id);
+	RETURN arrival_time;
+END//
+
+CREATE FUNCTION find_station_name(f_station_id INT)
+	RETURNS varchar(40)	
+BEGIN
+	DECLARE stat_name varchar(40)	;
+	SET stat_name = (SELECT station_name from stations WHERE f_station_id = station_id);
+	RETURN stat_name;
+END//
+
 
 /*
 This is a draft procedure for showing available trains
@@ -33,6 +55,7 @@ DECLARE f_start_segment INT;
 DECLARE f_end_segment INT;
 
 
+
 IF f_station_end >= f_station_start THEN /* made it equal to so that f_direction won't be uninitialized*/
 	SET f_direction = 0; # SOUTHBOUND
 ELSE
@@ -53,6 +76,8 @@ END IF;
 
 SET isweekdaybool = is_weekday(DATE(f_trip_date));
 
+
+
 /*
 	Need to determine direction to exclude half of the incorrect trains
 	Filter out trains based on M-F or SSH schedule
@@ -67,16 +92,36 @@ SET isweekdaybool = is_weekday(DATE(f_trip_date));
 */
 
 
-SELECT * FROM stops_at WHERE time_in > TIME(f_trip_date) AND station_id = f_station_start AND
-train_id IN 
-(SELECT train_id FROM `trains` WHERE free_seat_check(train_id,DATE(f_trip_date),f_start_segment,f_end_segment,f_quantity) AND (train_direction = f_direction AND train_days = isweekdaybool)
+SELECT train_id, 
+	sa.station_id as 'Origin', 
+	st.station_name as 'Origin Station',
+	f_station_end as 'Destination',
+
+	find_station_name(f_station_end) as 'Destination Station',
+
+	sa.time_out as 'Leaves At',
+	find_dest_arr_time(train_id,f_station_end) as 'Arrival Time',
+	calc_base_fare(f_station_start,f_station_end) as 'Base Fare'
+ FROM stops_at sa inner join stations st ON sa.station_id = st.station_id 
+ WHERE sa.time_in > TIME(f_trip_date) AND sa.station_id = f_station_start AND
+sa.train_id IN 
+(SELECT t.train_id FROM trains t  WHERE free_seat_check(t.train_id,DATE(f_trip_date),f_start_segment,f_end_segment,f_quantity) AND (t.train_direction = f_direction AND t.train_days = isweekdaybool)
 
 	 ) LIMIT 3;
 
 /*
-IF trainqty > 3
-	SET trainqty = 3;
-END IF; # I only want to display three choices based on user input
+WORKING BELOW:
+
+SELECT train_id, 
+	station_id as 'Origin', 
+	f_station_end as 'Destination', 
+	time_out as 'Leaves At',
+	find_dest_arr_time(train_id,f_station_end) as 'Arrival Time'
+ FROM stops_at WHERE time_in > TIME(f_trip_date) AND station_id = f_station_start AND
+train_id IN 
+(SELECT train_id FROM `trains` WHERE free_seat_check(train_id,DATE(f_trip_date),f_start_segment,f_end_segment,f_quantity) AND (train_direction = f_direction AND train_days = isweekdaybool)
+
+	 ) LIMIT 3;
 
 */
 
