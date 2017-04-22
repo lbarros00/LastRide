@@ -21,6 +21,24 @@ BEGIN
 	DECLARE f_trip_seg_ends INT;
 
 
+	#Check if user inputs erroneous information
+	IF f_trip_station_start >25 THEN
+		SET f_trip_station_start = 25;
+	END IF; 
+
+	IF f_trip_station_ends > 25 THEN
+		SET f_trip_station_ends = 25;
+	END IF;
+
+	IF f_trip_station_start < 1 THEN
+		SET f_trip_station_start = 1;
+	END IF; 
+
+	IF f_trip_station_ends < 1 THEN
+		SET f_trip_station_ends = 1;
+	END IF;
+
+
 
 	IF f_trip_station_ends > f_trip_station_start THEN
 

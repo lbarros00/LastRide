@@ -17,6 +17,23 @@ BEGIN
 	DECLARE f_fare_type INT;
 	DECLARE qtyloopcounter INT;
 
+		#Check if user inputs erroneous information
+	IF f_trip_seg_start >24 THEN
+		SET f_trip_seg_start = 24;
+	END IF; 
+
+	IF f_trip_seg_ends > 24 THEN
+		SET f_trip_seg_ends = 24;
+	END IF;
+
+	IF f_trip_seg_start < 1 THEN
+		SET f_trip_seg_start = 1;
+	END IF; 
+
+	IF f_trip_seg_ends < 1 THEN
+		SET f_trip_seg_ends = 1;
+	END IF;
+
 	SET total_fare = calc_base_fare_seg(f_trip_seg_start,f_trip_seg_ends); #initialize total_fare
 	SET currentdatetime = CURRENT_TIMESTAMP();
 	SET f_fare_type = 1; # will need to change this based on GUI
