@@ -12,17 +12,47 @@
         <div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation" class="active"><a href="#">Home</a></li>
-                    <li role="presentation"><a href="#">Log In</a></li>
-                    <li role="presentation"><a href="#">Sign Up</a></li>
+                    <li role="presentation"><a href="/">Home</a></li>
+                    <li role="presentation"><a href="/register" action="/register" method="post">Register</a></li>
+                    <li role="presentation"><a href="/login" action="/login" method="post">Login</a></li>
                 </ul>
             </nav>
             <h3 class="text-muted">LastRide</h3>
         </div>
-        <form action="/result" method="post">
-            <input type="text" class="form-control" name="station"/>
-            <input type="submit" class="btn btn-default" name="result"/>
-        </form>
+        <div class="col-md-4 col-md-offset-4">
+            <h3>Select Trip</h3>
+                <br/>
+                <form action="/" method="post">
+                    <label>From</label>
+                    <select class="form-control">
+                        {% for station_names in my_stations %}
+                          <option>{{ station_names }}</option>
+                        {% endfor %}
+                    </select>
+                <br/>
+                    <label>To</label>
+                    <select class="form-control">
+                        {% for station_names in my_stations %}
+                          <option>{{ station_names }}</option>
+                        {% endfor %}
+                    </select>
+                <br/>
+                    <label>Date</label>
+                    <select class="form-control">
+                        {% for item in dates %}
+                          <option>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            <br/>
+            <form action="/result" method="post">
+                <input type="text" class="form-control" name="station"/>
+                <br/>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-default" name="result"/>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 
