@@ -6,7 +6,7 @@ DELIMITER //
 # Will change based on GUI
 
 CREATE PROCEDURE create_trip_stations(f_train_id int, f_trip_date DATE, 
-							 f_trip_station_start int, f_trip_station_ends int, 
+							 f_station_start_name VARCHAR(40), f_station_end_name VARCHAR(40), 
 							 quantity int, f_paying_passenger_id INT,
 							 f_card_number VARCHAR(16), f_billing_address varchar(100))
 BEGIN
@@ -19,6 +19,12 @@ BEGIN
 	DECLARE qtyloopcounter INT;
 	DECLARE f_trip_seg_start INT;
 	DECLARE f_trip_seg_ends INT;
+	DECLARE f_trip_station_start INT;
+	DECLARE f_trip_station_ends INT;
+
+	SET f_trip_station_start = (SELECT station_id FROM stations WHERE f_station_start_name = station_name);
+	SET f_trip_station_ends = (SELECT station_id FROM stations WHERE f_station_end_name = station_name);
+
 
 
 	#Check if user inputs erroneous information
