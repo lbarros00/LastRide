@@ -9,7 +9,7 @@ DROP PROCEDURE IF EXISTS generate_free_seats;
 DROP FUNCTION IF EXISTS is_weekday;
 
 CREATE FUNCTION is_weekday(d date)
-	RETURNS BOOLEAN
+	RETURNS BOOLEAN DETERMINISTIC
 	RETURN dayofweek(d) between 2 and 6;
 
 
@@ -42,7 +42,8 @@ begin
 	END WHILE;
 
 	/* The entires in seats_free is the cross product of dates, segments
-	 * and trains, such that the train runs on the date and the train travels   * that segment.
+	 * and trains, such that the train runs on the date and the train travels   *
+	 * that segment.
 	 */
 	INSERT INTO seats_free (train_id, segment_id, seat_free_date)
 		SELECT tr.train_id, se.segment_id, d.dates FROM trains tr
@@ -51,13 +52,10 @@ begin
 				AND 
 				se.seg_s_end BETWEEN tr.train_start AND tr.train_end
 			JOIN dates d ON
-				(is_weekday(d.dates) AND  tr.train_days)
-				OR
-				( is_weekday(d.dates) AND tr.train_days)
-/*
-				(is_weekday(d.dates) AND NOT tr.train_days)
-				OR
-				(NOT is_weekday(d.dates) AND tr.train_days)*/ #Original; changed by TQ on 2017-04-19
+        /* weekday and weekday train */
+				(is_weekday(d.dates) AND  tr.train_days) 
+				OR /* not weekday and not weekday train */
+				( NOT is_weekday(d.dates) AND NOT tr.train_days) 
 			;
 
 	DROP TEMPORARY TABLE IF EXISTS dates;
