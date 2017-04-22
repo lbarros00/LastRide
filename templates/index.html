@@ -32,8 +32,8 @@
                 <br/>
                     <label>To</label>
                     <select class="form-control">
-                        {% for station_names in my_stations %}
-                          <option>{{ station_names }}</option>
+                        {% for names in my_stations %}
+                          <option>{{ names }}</option>
                         {% endfor %}
                     </select>
                 <br/>
@@ -41,6 +41,13 @@
                     <select class="form-control">
                         {% for item in dates %}
                           <option>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                <br/>
+                    <label>Depart at</label>
+                    <select class="form-control">
+                        {% for time in times %}
+                          <option>{{ time }}</option>
                         {% endfor %}
                     </select>
                 </form>
