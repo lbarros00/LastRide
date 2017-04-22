@@ -42,8 +42,8 @@ payment credit card number;
 
 */
 
-CREATE PROCEDURE show_trains(f_trip_date DATETIME, 
-							 f_station_start int, f_station_end int, 
+CREATE PROCEDURE show_trains(f_trip_date DATE, f_trip_time TIME,
+							 f_station_start_name VARCHAR(40), f_station_end_name VARCHAR(40), 
 							 f_quantity int 
 							 )
 BEGIN
@@ -53,6 +53,12 @@ DECLARE f_direction BOOLEAN;
 DECLARE trainqty INT; #Number that holds number of availabe trains 
 DECLARE f_start_segment INT;
 DECLARE f_end_segment INT;
+DECLARE f_station_start INT;
+DECLARE f_station_end INT;
+
+SET f_station_start = (SELECT station_id FROM stations WHERE f_station_start_name = station_name);
+SET f_station_end = (SELECT station_id FROM stations WHERE f_station_end_name = station_name);
+
 
 
 
@@ -74,7 +80,7 @@ ELSE
 END IF;
 
 
-SET isweekdaybool = is_weekday(DATE(f_trip_date));
+SET isweekdaybool = is_weekday(f_trip_date);
 
 
 
@@ -103,9 +109,9 @@ SELECT train_id,
 	find_dest_arr_time(train_id,f_station_end) as 'Arrival Time',
 	calc_base_fare(f_station_start,f_station_end) as 'Base Fare'
  FROM stops_at sa inner join stations st ON sa.station_id = st.station_id 
- WHERE sa.time_in > TIME(f_trip_date) AND sa.station_id = f_station_start AND
+ WHERE sa.time_in > f_trip_time AND sa.station_id = f_station_start AND
 sa.train_id IN 
-(SELECT t.train_id FROM trains t  WHERE free_seat_check(t.train_id,DATE(f_trip_date),f_start_segment,f_end_segment,f_quantity) AND (t.train_direction = f_direction AND t.train_days = isweekdaybool)
+(SELECT t.train_id FROM trains t  WHERE free_seat_check(t.train_id,f_trip_date,f_start_segment,f_end_segment,f_quantity) AND (t.train_direction = f_direction AND t.train_days = isweekdaybool)
 
 	 ) LIMIT 3;
 
