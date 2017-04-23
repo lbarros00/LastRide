@@ -46,6 +46,12 @@ def my_times_list():
             my_times.append(h)
     return my_times
 
+def num_passengers():
+    number_of_passengers = []
+    for i in range(21):
+        number_of_passengers.append(i)
+    return number_of_passengers
+
 app = Flask(__name__)
 
 
@@ -58,10 +64,11 @@ def home():  # index page index.html
 
     my_dates = my_dates_list()
     my_times = my_times_list()
+    passengers = num_passengers()
 
     fetchedStations = [r[0] for r in ob.fetchall()]
 
-    return render_template('index.html', my_stations=fetchedStations, dates=my_dates, times=my_times)
+    return render_template('index.html', my_stations=fetchedStations, dates=my_dates, times=my_times, numbers=passengers)
 
 
 @app.route('/result', methods=['post'])
