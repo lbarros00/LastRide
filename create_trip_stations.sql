@@ -68,7 +68,7 @@ BEGIN
 	SET free_seat_bool = free_seat_check(f_train_id, f_trip_date,f_trip_seg_start,f_trip_seg_ends,quantity);
 
 
-	IF free_seat_bool = 1 OR (f_trip_station_ends != f_trip_station_start) THEN
+	IF free_seat_bool = 1 AND (f_trip_station_ends != f_trip_station_start) THEN
 
 		 call free_seat_decrement(f_train_id, f_trip_date, f_trip_seg_start, f_trip_seg_ends, quantity); #decrease number of free seats
 
