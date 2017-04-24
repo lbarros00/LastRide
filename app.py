@@ -1,51 +1,9 @@
 import MySQLdb
 from flask import Flask, request, render_template
-import datetime
-import calendar
 
-def add_days(sourcedate, months, days):     # increments by days and months to generate dates
-    month = sourcedate.month - 1 + months
-    year = int(sourcedate.year + month / 12)
-    month = month % 12 + 1
-    day = min(sourcedate.day + days, calendar.monthrange(year, month)[1])
-    return datetime.date(year, month, day)
+db = MySQLdb.connect("localhost", "root", "", "s17336team1")  # connects to the database
 
-def add_hours(sourcetime, hrs, mins):       # add hours and minutes to generate times
-    hr = sourcetime.hour + hrs
-    min = sourcetime.minute + mins
-    sec = sourcetime.second
-    if min > 59:
-        return datetime.time(hr, 0, sec)
-    else:
-        return datetime.time(hr, min, sec)
-
-def my_dates_list():
-    now = datetime.date(datetime.date.today().year, 1, 1)
-    my_dates = []                 # array to store generated dates
-
-    for n in range(12):           # generates dates starting from 01-01-(Current Year) for 365 days
-        for i in range(31):
-            d = add_days(now, n, i)
-            d.strftime("%m-%d-%Y")
-            my_dates.append(d)
-            if (my_dates[len(my_dates) - 1] != d):
-                my_dates.append(d)
-    return my_dates
-
-def my_times_list():
-    hrs = datetime.time(0, 0, 0)  # initialize time to midnight
-    my_times = []                 # array to store all possible times
-
-    for i in range(24):
-        for j in range(1):
-            h = add_hours(hrs, i, 30)
-            f = datetime.time(i, 0, 0)
-            h.strftime("%H:%M:%S")
-            f.strftime("%H:%M:%S")
-            my_times.append(f)
-            my_times.append(h)
-    return my_times
-
+# generate number of passengers to be input in a reservation
 def num_passengers():
     number_of_passengers = []
     for i in range(21):
@@ -54,31 +12,37 @@ def num_passengers():
 
 app = Flask(__name__)
 
-
+# renders index page index.html
 @app.route('/', methods=['get', 'post'])
-def home():  # index page index.html
-    db = MySQLdb.connect("localhost", "root", "", "team1")  # connects to the database
+def home():
     ob = db.cursor()
     query = 'SELECT stations.station_name FROM s17336team1.stations'
     ob.execute(query)
 
-    my_dates = my_dates_list()
-    my_times = my_times_list()
-    passengers = num_passengers()
+    passengers = num_passengers()  # generate a list with max passenger number for reservation
 
-    fetchedStations = [r[0] for r in ob.fetchall()]
+    fetchedStations = [r[0] for r in ob.fetchall()]  # break down data for stations
 
-    return render_template('index.html', my_stations=fetchedStations, dates=my_dates, times=my_times, numbers=passengers)
+    return render_template('index.html', my_stations=fetchedStations, numbers=passengers)
 
+# routes to the results upon query
+@app.route('/result', methods=['get', 'post'])
+def result():
+    tostation = request.form['tostation']
+    fromstation = request.form['fromstation']
+    dt = request.form['date']
+    tm = request.form['time']
+    adult = request.form['adult']
+    # child = request.form['child']
+    # senior = request.form['senior']
+    # total = adult + child + senior
 
-@app.route('/result', methods=['post'])
-def result():  # routes to the results upon query
-    station = request.form['station']
-    db = MySQLdb.connect("localhost", "root", "", "team1")  # connects to the database
-    ob = db.cursor()
-    query = 'SELECT stations.station_name FROM s17336team1.stations'
-    ob.execute(query)
-    return render_template('results.html', m=ob.fetchall())  # m refers to object in the database to be rendered in results
+    cur = db.cursor()
+    cur.callproc('s17336team1.show_trains', [dt, tm, fromstation, tostation, adult]) # call procedure show_trains()
+
+    fetchedData = [(r[2], r[4], r[5], r[6], r[7]) for r in cur.fetchall()] # break down of data from show_trains()
+
+    return render_template('results.html', m=fetchedData)  # m refers to object in the database to be rendered in results
 
 
 @app.route('/login', methods=['get', 'post'])
@@ -88,6 +52,14 @@ def login():
 
 @app.route('/register', methods=['get', 'post'])
 def register():
+    # first = request.form['first']
+    # last = request.form['last']
+    # email = request.form['email']
+    # passwrd = request.form['passwrd']
+    # cardNum = request.form['cardnum']
+    # address = request.form['address']
+    # ob = db.cursor()
+    # query = "INSERT INTO s17336team1.passengers (fname, lname, email, password, preferred_card_number, preferred_billing_address) VALUES ('')"
     return render_template('register.html')
 
 
