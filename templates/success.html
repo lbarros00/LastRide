@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>LastRide</title>
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <nav>
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="/dashboard">Home</a></li>
+                    <li role="presentation"><a href="/login" action="/login" method="post">Logout</a></li>
+                </ul>
+            </nav>
+            <h3 class="text-muted">LastRide</h3>
+        </div>
+        <div class="col-md-4 col-md-offset-4" style="margin-top: -20px;">
+            <h3>Select Trip</h3>
+            <form action="/result" method="post">
+                <label>From</label>
+                <input type="text" class="form-control" name="fromstation"/>
+                <br/>
+                <label>To</label>
+                <input type="text" class="form-control" name="tostation"/>
+                <br/>
+                <label>Date</label>
+                <input type="date" class="form-control" name="date"/>
+                <br/>
+                <label>Depart at</label>
+                <input type="time" class="form-control" name="time"/>
+                <br/>
+                <label>Tickets</label>
+                <input type="text" class="form-control" name="adult"/>
+                <br/>
+                <div style="text-align: center;">
+                    <input type="submit" class="btn btn-default" name="result"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

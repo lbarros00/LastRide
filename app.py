@@ -47,8 +47,24 @@ def result():
 
 @app.route('/login', methods=['get', 'post'])
 def login():
+    # email = request.form['email']
+    # # passwrd = request.form['passwrd']
+    # cur = db.cursor()
+    # query = "SELECT * from s17336team1.passengers WHERE passengers.email LIKE '"+email+"'"
+    # cur.execute(query)
     return render_template('login.html')
 
+def getlogin():
+    email = request.form['email']
+    # passwrd = request.form['passwrd']
+    cur = db.cursor()
+    query = "SELECT * from s17336team1.passengers WHERE passengers.email LIKE '" + email + "'"
+    cur.execute(query)
+    return render_template('success.html')
+
+@app.route('/dashboard', methods=['get', 'post'])
+def success():
+    return render_template('success.html')
 
 @app.route('/register', methods=['get', 'post'])
 def register():
