@@ -20,21 +20,23 @@
         <div class="col-md-4 col-md-offset-4">
             <h3>Register</h3>
             <br/>
-            <input type="text" class="form-control" name="email" placeholder="First Name"/>
-            <br/>
-            <input type="text" class="form-control" name="password" placeholder="Last Name"/>
-            <br/>
-            <input type="text" class="form-control" name="email" placeholder="Email"/>
-            <br/>
-            <input type="password" class="form-control" name="password" placeholder="Password"/>
-            <br/>
-            <input type="text" class="form-control" name="email" placeholder="Card Number"/>
-            <br/>
-            <input type="text" class="form-control" name="password" placeholder="Billing Address"/>
-            <br/>
-            <div style="text-align: center;">
-                <button class="btn btn-default">Submit</button>
-            </div>
+            <form action="/welcome" method="post">
+                <input type="text" class="form-control" name="first" placeholder="First Name"/>
+                <br/>
+                <input type="text" class="form-control" name="last" placeholder="Last Name"/>
+                <br/>
+                <input type="text" class="form-control" name="email" placeholder="Email"/>
+                <br/>
+                <input type="password" class="form-control" name="passwrd" placeholder="Password"/>
+                <br/>
+                <input type="text" class="form-control" name="cardnum" placeholder="Card Number"/>
+                <br/>
+                <input type="text" class="form-control" name="address" placeholder="Billing Address"/>
+                <br/>
+                <div style="text-align: center;">
+                    <button class="btn btn-default">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </body>
