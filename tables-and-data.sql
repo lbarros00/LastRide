@@ -142,7 +142,8 @@ INSERT INTO fare_types (fare_name, rate) VALUES
 	('adult', 1.00),
 	('child', 0.50),
 	('senior', 0.70),
-	('military',0.80);
+	('military',0.80),
+	('pets',0.05);
 
 /* }}} ****************************************************/
 
