@@ -47,7 +47,7 @@ payment credit card number;
 
 CREATE PROCEDURE show_trains(f_trip_date DATE, f_trip_time TIME,
 							 f_station_start_name VARCHAR(40), f_station_end_name VARCHAR(40), 
-							 f_qty_adult int, f_qty_child int, f_qty_senior int, f_qty_military int 
+							 f_qty_adult int, f_qty_child int, f_qty_senior int, f_qty_military int , f_qty_pets int
 							 )
 
 
@@ -135,7 +135,8 @@ SET isweekdaybool = is_weekday(f_trip_date);
 	calc_full_fare(f_trip_date,'adult',calc_base_fare(f_station_start,f_station_end))*f_qty_adult + 
 	calc_full_fare(f_trip_date,'child',calc_base_fare(f_station_start,f_station_end))*f_qty_child + 
 	calc_full_fare(f_trip_date,'senior',calc_base_fare(f_station_start,f_station_end))*f_qty_senior + 
-	calc_full_fare(f_trip_date,'military',calc_base_fare(f_station_start,f_station_end))*f_qty_military 
+	calc_full_fare(f_trip_date,'military',calc_base_fare(f_station_start,f_station_end))*f_qty_military +
+	calc_full_fare(f_trip_date,'pets',calc_base_fare(f_station_start,f_station_end))*f_qty_pets 
 	as 'Total Fare'
 	
 
