@@ -4,7 +4,7 @@
 DROP FUNCTION IF EXISTS calc_full_fare;
 DELIMITER //
 
-CREATE FUNCTION calc_full_fare(f_trip_date DATE,f_fare_name varchar(20), f_base_fare DECIMAL(7,2) )
+CREATE FUNCTION calc_full_fare(f_trip_date DATE,f_fare_id int, f_base_fare DECIMAL(7,2) )
 RETURNS DECIMAL(7,2)
 
 BEGIN
@@ -23,7 +23,7 @@ BEGIN
 		SET date_diff = 30 ;
 	END IF;
 
-	SET fare_discount = (SELECT rate from fare_types WHERE fare_name = f_fare_name );
+	SET fare_discount = (SELECT rate from fare_types WHERE fare_id = f_fare_id );
 
 
 	SET percent_increase = 0.01*(30-date_diff);

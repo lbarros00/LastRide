@@ -132,11 +132,11 @@ SET isweekdaybool = is_weekday(f_trip_date);
 
 	find_dest_arr_time(train_id,f_station_end) as 'Arrival Time',
 	f_quantity as 'Number of Passengers',
-	calc_full_fare(f_trip_date,'adult',calc_base_fare(f_station_start,f_station_end))*f_qty_adult + 
-	calc_full_fare(f_trip_date,'child',calc_base_fare(f_station_start,f_station_end))*f_qty_child + 
-	calc_full_fare(f_trip_date,'senior',calc_base_fare(f_station_start,f_station_end))*f_qty_senior + 
-	calc_full_fare(f_trip_date,'military',calc_base_fare(f_station_start,f_station_end))*f_qty_military +
-	calc_full_fare(f_trip_date,'pets',calc_base_fare(f_station_start,f_station_end))*f_qty_pets 
+	calc_full_fare(f_trip_date, 1, calc_base_fare(f_station_start,f_station_end))*f_qty_adult + 
+	calc_full_fare(f_trip_date, 2, calc_base_fare(f_station_start,f_station_end))*f_qty_child + 
+	calc_full_fare(f_trip_date, 3, calc_base_fare(f_station_start,f_station_end))*f_qty_senior + 
+	calc_full_fare(f_trip_date, 4, calc_base_fare(f_station_start,f_station_end))*f_qty_military +
+	calc_full_fare(f_trip_date, 5, calc_base_fare(f_station_start,f_station_end))*f_qty_pets 
 	as 'Total Fare'
 	
 
