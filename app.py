@@ -1,6 +1,5 @@
 import MySQLdb
-from hashlib import md5
-from flask import Flask, request, render_template, session, redirect, url_for, escape
+from flask import Flask, request, render_template, session
 
 db = MySQLdb.connect("localhost", "root", "", "s17336team1")  # connects to the database
 
@@ -12,8 +11,6 @@ def num_passengers():
     return number_of_passengers
 
 app = Flask(__name__)
-
-class ServerError(Exception):pass
 
 # renders index page index.html
 @app.route('/', methods=['get', 'post'])
@@ -46,7 +43,7 @@ def result():
     cur.callproc('s17336team1.show_trains', [dt, tm, fromstation, tostation, adult])
 
     # break down of data from show_trains()
-    fetchedData = [(r[2], r[4], r[5], r[6], r[7]) for r in cur.fetchall()]
+    fetchedData = [(r[0], r[2], r[4], r[5], r[6], r[7]) for r in cur.fetchall()]
 
     # m refers to object in the database to be rendered in results
     return render_template('results.html', m=fetchedData)
@@ -60,52 +57,27 @@ def login():
     # query = "SELECT * from s17336team1.passengers WHERE passengers.email LIKE '"+email+"'"
     # cur.execute(query)
     # return render_template('login.html')
-    error = None
 
-    if 'username' in session:
-        return redirect(url_for('/'))
-
-    try:
-        if request.method == 'POST':
-            username_form  = request.form['username']
-            cur.execute("SELECT COUNT(1) FROM s17336team1.passengers WHERE email = '{}';"
-                        .format(username_form))
-
-            if not cur.fetchone()[0]:
-                raise ServerError('Invalid username')
-
-            password_form  = request.form['password']
-            cur.execute("SELECT s17336team1.passengers.password FROM s17336team1.passengers WHERE password = '{}';"
-                        .format(password_form))
-
-            for row in cur.fetchall():
-                if md5(password_form).hexdigest() == row[0]:
-                    session['username'] = request.form['username']
-                    return redirect(url_for('/'))
-
-            raise ServerError('Invalid password')
-    except ServerError as e:
-        error = str(e)
-
-    return render_template('login.html', error=error)
+    return render_template('login.html')
 
 # def getlogin():
 #     email = request.form['email']
 #     # passwrd = request.form['passwrd']
 #     cur = db.cursor()
-#     query = "SELECT * from s17336team1.passengers WHERE passengers.email LIKE '" + email + "'"
+#     query = "SELECT * from s17336team1.passengers WHERE passengers.email LIKE '" + email + "';"
 #     cur.execute(query)
 #     return render_template('success.html')
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
-    return redirect(url_for('login'))
+    return render_template('login.html')
 
 @app.route('/dashboard', methods=['get', 'post'])
 def success():
     return render_template('success.html')
 
+# renders page where you can register for an account with LastRide
 @app.route('/register', methods=['get', 'post'])
 def register():
     return render_template('register.html')

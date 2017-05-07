@@ -20,14 +20,16 @@
     <h2>Results</h2>
         <table>
                 <tr>
+                    <td style="width: 10px;"> <b>Train ID</b> </td>
                     <td style="width: 250px;"> <b>From</b> </td>
                     <td style="width: 250px;"> <b>To</b> </td>
                     <td style="width: 100px;"> <b>Departs at</b> </td>
                     <td style="width: 100px;"> <b>Arrives at</b> </td>
                     <td style="width: 50px;"> <b>Fare</b> </td>
                 </tr>
-                {% for from_, to, leaves, arrives, fare in m %}
+                {% for train_id, from_, to, leaves, arrives, fare in m %}
                     <tr>
+                        <td style="width: 90px;"> {{ train_id }} </td>
                         <td style="width: 250px;"> {{ from_ }} </td>
                         <td style="width: 250px;"> {{ to }} </td>
                         <td style="width: 100px;"> {{ leaves }} </td>
