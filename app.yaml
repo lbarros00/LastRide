@@ -5,3 +5,18 @@ threadsafe: yes
 handlers:
 - url: .*
   script: app.app
+
+libraries:
+- name: MySQLdb
+  version: "latest"
+
+# To get the connection name run the following:
+#   gcloud sql instances describe team1-lastride
+# where `team1-lastride` is the name of the database on Google Cloud Platform.
+# Look for a line which starts with `connectionName:`
+# alternatively, you could do:
+#   gcloud sql instances describe team1-lastride | grep connectionName
+env_variables:
+    CLOUDSQL_CONNECTION_NAME: "global-env-166817:us-east1:team1-lastride"
+    CLOUDSQL_USER: "root"
+    CLOUDSQL_PASSWORD: "lastridebestride"
