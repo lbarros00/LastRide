@@ -27,14 +27,14 @@ CREATE TABLE passengers (
 	lname varchar(100),
 	email varchar(100),
 	/* acct_name varchar(30), */
-	password varchar(30), /* plaintext password */
+	password varchar(75), /* password */
 	preferred_card_number varchar(16), /* at most 16 digit card numbers */
 	preferred_billing_address varchar(100)
 	);
 
 CREATE TABLE segments (
 	segment_id INT PRIMARY KEY AUTO_INCREMENT,
-	seg_n_end INT NOT NULL, 
+	seg_n_end INT NOT NULL,
 	seg_s_end INT NOT NULL,
 	seg_fare DECIMAL(7,2) NOT NULL
 	);
@@ -57,7 +57,7 @@ CREATE TABLE trips (
 	/* passenger_id INT NOT NULL, */
 	fare_type INT NOT NULL, /* id of a fare_types table */
 	fare DECIMAL(7,2) NOT NULL,
-	trip_train_id INT NOT NULL, 
+	trip_train_id INT NOT NULL,
 	reservation_id INT NOT NULL
 	);
 
@@ -138,18 +138,20 @@ INSERT INTO passengers
 
 /* Fare Types: {{{ ****************************************/
 
-INSERT INTO fare_types (fare_name, rate) VALUES 
+INSERT INTO fare_types (fare_name, rate) VALUES
 	('adult', 1.00),
 	('child', 0.50),
-	('senior', 0.70);
+	('senior', 0.70),
+	('military',0.80),
+	('pets',0.10);
 
 /* }}} ****************************************************/
 
 /* Stations Data: {{{ ******************************************/
 
-INSERT INTO stations 
-	(station_name,station_symbol) 
-	VALUES 
+INSERT INTO stations
+	(station_name,station_symbol)
+	VALUES
 	('Boston, MA - South Station','BOS'),
 	('Boston, MA - Back Bay Station','BBY'),
 	('Route 128, MA','RTE'),
@@ -180,9 +182,9 @@ INSERT INTO stations
 
 /* Train Data: {{{ ****************************************/
 
-INSERT INTO trains 
-	(train_id,train_start,train_end,train_direction,train_days) 
-	VALUES 
+INSERT INTO trains
+	(train_id,train_start,train_end,train_direction,train_days)
+	VALUES
 
 	/* These are the M-F Southbound towards DC */
 	(1,1,25,0,1),
@@ -224,9 +226,9 @@ INSERT INTO trains
 
 /* Segments Data: {{{ *************************************/
 
-INSERT INTO segments 
-	(seg_n_end,seg_s_end,seg_fare) 
-	VALUES 
+INSERT INTO segments
+	(seg_n_end,seg_s_end,seg_fare)
+	VALUES
 	(1,2,2.82),
 	(2,3,4.70),
 	(3,4,11.75),
@@ -259,7 +261,7 @@ INSERT INTO segments
 /* trains 1-8 are M-F southbound, 9-16 are M-F northbound */
 /* trains 17-22 are SSH southbound, 23-28 are SSH northbound */
 
-INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES 
+INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES
 	(1 , 1 , ' 06:25:00 ', ' 06:30:00 ') ,
 	(1 , 2 , ' 06:36:00 ', ' 06:41:00 ') ,
 	(1 , 3 , ' 06:51:00 ', ' 06:56:00 ') ,
@@ -994,39 +996,39 @@ INSERT INTO stops_at (train_id,station_id,time_in,time_out) VALUES
 
 /* Constraints: {{{ ***************************************/
 
-ALTER TABLE trains 
+ALTER TABLE trains
 	ADD foreign key(train_start) references stations(station_id);
-ALTER TABLE trains 
+ALTER TABLE trains
 	ADD foreign key(train_end) references stations(station_id);
 
-alter table segments 
+alter table segments
 	add foreign key(seg_n_end) references stations(station_id);
-alter table segments 
+alter table segments
 	add foreign key(seg_s_end) references stations(station_id);
 
-ALTER TABLE trips 
+ALTER TABLE trips
 	ADD foreign key(trip_seg_start) REFERENCES segments(segment_id);
-ALTER TABLE trips 
+ALTER TABLE trips
 	ADD foreign key(trip_seg_ends) REFERENCES segments(segment_id);
-ALTER TABLE trips 
+ALTER TABLE trips
 	ADD foreign key(trip_train_id) REFERENCES trains(train_id);
-ALTER TABLE trips 
+ALTER TABLE trips
 	ADD foreign key(reservation_id) REFERENCES reservations(reservation_id);
 ALTER TABLE trips
 	ADD foreign key(fare_type) REFERENCES fare_types(fare_id);
 
 alter table seats_free
 	add primary key (train_id, segment_id, seat_free_date);
-ALTER TABLE seats_free 
+ALTER TABLE seats_free
 	ADD foreign key(segment_id) REFERENCES segments(segment_id);
-ALTER TABLE seats_free 
+ALTER TABLE seats_free
 	ADD foreign key(train_id) REFERENCES trains(train_id);
 
-ALTER TABLE stops_at 
+ALTER TABLE stops_at
 	ADD PRIMARY KEY (train_id,station_id);
-ALTER TABLE stops_at 
+ALTER TABLE stops_at
 	ADD foreign key(train_id) references trains(train_id);
-ALTER TABLE stops_at 
+ALTER TABLE stops_at
 	ADD foreign key(station_id) references stations(station_id);
 
 alter table reservations

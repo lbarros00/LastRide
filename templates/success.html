@@ -13,10 +13,15 @@
             <nav>
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation"><a href="/dashboard">Home</a></li>
-                    <li role="presentation"><a href="/logout" action="/login" method="post">Logout</a></li>
+                    <li role="presentation"><a href="/login" action="/login" method="post">Logout</a></li>
                 </ul>
             </nav>
             <h3 class="text-muted">LastRide</h3>
+        </div>
+        <div>
+        {% if current_user.is_authenticated %}
+              <b>Welcome,</b> {{ current_user.id }}!
+        {% endif %}
         </div>
         <div class="col-md-4 col-md-offset-4" style="margin-top: -20px;">
             <h3>Select Trip</h3>

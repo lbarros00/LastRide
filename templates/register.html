@@ -33,6 +33,15 @@
                 <br/>
                 <input type="text" class="form-control" name="address" placeholder="Billing Address"/>
                 <br/>
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div>
+                    {% for message in messages %}
+                      <p style="color: red;">{{ message }}</p>
+                    {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
                 <div style="text-align: center;">
                     <button class="btn btn-default">Submit</button>
                 </div>
