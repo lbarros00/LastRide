@@ -97,6 +97,11 @@ BEGIN
 
 		 call free_seat_decrement(f_train_id, f_trip_date, f_trip_seg_start, f_trip_seg_ends, f_quantity); #decrease number of free seats
 
+		IF ((f_return_train_id != '' AND f_return_train_id IS NOT NULL) AND (f_return_trip_date !='' AND f_return_trip_date IS NOT NULL)) THEN
+			call free_seat_decrement(f_return_train_id, f_return_trip_date, f_trip_seg_start, f_trip_seg_ends, f_quantity); #decrease number of free seats
+		END IF;
+
+
 
 		 IF (f_card_number IS NULL OR f_card_number = '') THEN
 
@@ -137,6 +142,7 @@ BEGIN
 		ELSE
 		 	SET pet_surcharge_return = 0;
 		END IF;
+
 
 
 	
