@@ -10,31 +10,28 @@
         <div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/">Home</a></li>
-                    <li role="presentation"><a href="/register" action="/register" method="post">Register</a></li>
-                    <li role="presentation"><a href="/login" action="/login" method="post">Login</a></li>
+                    <li role="presentation"><a href="/login" action="/logout" method="post">Logout</a></li>
                 </ul>
             </nav>
             <h3 class="text-muted">LastRide</h3>
         </div>
-    <h2>Results</h2>
-        <table>
+        <h4>Results from <u>{{ fromS }}</u> to <u>{{ to }}</u>:</h4>
+        <br/>
+        <table class="table table-inverse" style="font-size: 14px; text-align: center; border-bottom: solid;">
                 <tr>
                     <td style="width: 10px;"> <b>Train ID</b> </td>
-                    <td style="width: 250px;"> <b>From</b> </td>
-                    <td style="width: 250px;"> <b>To</b> </td>
-                    <td style="width: 100px;"> <b>Departs at</b> </td>
+                    <td style="width: 100px;"> <b>Departs at {{ station }}</b> </td>
                     <td style="width: 100px;"> <b>Arrives at</b> </td>
-                    <td style="width: 50px;"> <b>Fare</b> </td>
+                    <td style="width: 100px;"> <b>Total Fare</b> </td>
+                    <td style="width: 100px;"> </td>
                 </tr>
-                {% for train_id, from_, to, leaves, arrives, fare in m %}
+                {% for train_id, leaves, arrives, fare in m %}
                     <tr>
                         <td style="width: 90px;"> {{ train_id }} </td>
-                        <td style="width: 250px;"> {{ from_ }} </td>
-                        <td style="width: 250px;"> {{ to }} </td>
                         <td style="width: 100px;"> {{ leaves }} </td>
                         <td style="width: 100px;"> {{ arrives }} </td>
                         <td style="width: 50px;"> {{ fare }} </td>
+                        <td style="width: 50px;"> <button class="btn btn-default">Reserve</button> </td>
                     </tr>
                 {% endfor %}
         </table>

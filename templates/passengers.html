@@ -27,6 +27,30 @@
               <li role="presentation"><a href="/trips">Trips</a></li>
             </ul>
         </div>
+        <div class="table-responsive">
+            <table class="table" style="font-size: 12px;">
+                <tr>
+                    <td><b>passenger_id</b></td>
+                    <td><b>fname</b></td>
+                    <td><b>lname</b></td>
+                    <td><b>email</b></td>
+                    <td style="width: 50px;"><b>password</b></td>
+                    <td><b>preferred_card_number</b></td>
+                    <td><b>preferred_billing_address</b></td>
+                </tr>
+                {% for id, fname, lname, email, password, pref_card, pref_addr in myPassengers %}
+                <tr>
+                    <td> {{ id }} </td>
+                    <td> {{ fname }} </td>
+                    <td> {{ lname }} </td>
+                    <td> {{ email }} </td>
+                    <td style="width: 50px;"> {{ password }} </td>
+                    <td> {{ pref_card }} </td>
+                    <td> {{ pref_addr }} </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 </body>
 

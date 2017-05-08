@@ -1,5 +1,7 @@
+from datetime import timedelta
+
 import MySQLdb
-from flask import Flask, flash, request, render_template, redirect, url_for
+from flask import Flask, flash, request, render_template, redirect, url_for, session
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -9,7 +11,7 @@ db = MySQLdb.connect("localhost", "root", "", "s17336team1")
 # generate number of passengers to be input in a reservation
 def num_passengers():
     number_of_passengers = []
-    for i in range(21):
+    for i in range(16):
         number_of_passengers.append(i)
     return number_of_passengers
 
@@ -31,6 +33,11 @@ login_manager.init_app(app)
 users = giveMyUsers()
 
 class User(UserMixin): pass
+
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(hours=8)
 
 @login_manager.user_loader
 def user_loader(email):
@@ -76,6 +83,26 @@ def home():
 
     return render_template('index.html', my_stations=fetchedStations, numbers=passengers)
 
+@app.route('/passengers', methods=['get', 'post'])
+def passengers():
+    cur = db.cursor()
+    query = 'SELECT * FROM s17336team1.passengers'
+    cur.execute(query)
+    fetchPassengersData = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6]) for r in cur.fetchall()]
+
+    return render_template('passengers.html', myPassengers=fetchPassengersData)
+
+@app.route('/reservations', methods=['get', 'post'])
+def reservations():
+    return render_template('reservations.html')
+
+@app.route('/freeseats', methods=['get', 'post'])
+def freeseats():
+    return render_template('freeseats.html')
+
+@app.route('/trips', methods=['get', 'post'])
+def trips():
+    return render_template('trips.html')
 
 # routes to the results upon query
 @app.route('/result', methods=['get', 'post'])
@@ -85,9 +112,10 @@ def result():
     dt = request.form['date']
     tm = request.form['time']
     adult = request.form['adult']
-    # child = request.form['child']
-    # senior = request.form['senior']
-    # total = adult + child + senior
+    child = request.form['child']
+    senior = request.form['senior']
+    military = request.form['military']
+    pet = request.form['pet']
 
     # station_id = db.cursor()
     cur = db.cursor()
@@ -95,13 +123,13 @@ def result():
     # query = "SELECT stations.station_symbol FROM s17336team1.stations WHERE station_name LIKE '"+tostation+"';"
 
     # call procedure show_trains()
-    cur.callproc('s17336team1.show_trains', [dt, tm, fromstation, tostation, adult])
+    cur.callproc('s17336team1.show_trains', [dt, tm, fromstation, tostation, adult, child, senior, military, pet])
 
     # break down of data from show_trains()
-    fetchedData = [(r[0], r[2], r[4], r[5], r[6], r[7]) for r in cur.fetchall()]
+    fetchedData = [(r[0], r[5], r[6], r[8]) for r in cur.fetchall()]
 
     # m refers to object in the database to be rendered in results
-    return render_template('results.html', m=fetchedData)
+    return render_template('results.html', m=fetchedData, to=tostation, fromS=fromstation)
 
 
 @app.route('/login', methods=['get', 'post'])
@@ -115,9 +143,6 @@ def logout():
 
 @app.route('/dashboard', methods=['get', 'post'])
 @login_required
-def success():
-    return render_template('success.html')
-
 def getlogin():
     email = request.form['email']
     passwrd = request.form['passwrd']
@@ -129,11 +154,13 @@ def getlogin():
 
     fetchPass = [r[0] for r in cur.fetchall()]
 
+    passengers = num_passengers()
+
     if check_password_hash(fetchPass[0], passwrd):
         user = User()
         user.id = email
         login_user(user)
-        return redirect(url_for('success'))
+        return render_template('success.html', numbers=passengers)
     else:
         flash('Incorrect Password.')
         return redirect(url_for('login'))
