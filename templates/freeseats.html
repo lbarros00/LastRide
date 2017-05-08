@@ -27,8 +27,23 @@
               <li role="presentation"><a href="/trips">Trips</a></li>
             </ul>
         </div>
-        <div>
-            Free Seats
+        <div class="table-responsive">
+            <table class="table" style="font-size: 12px;">
+                <tr>
+                    <td><b>train_id</b></td>
+                    <td><b>segment_id</b></td>
+                    <td><b>seat_free_date</b></td>
+                    <td><b>freeseat</b></td>
+                </tr>
+                {% for train_id, segment_id, seat_free_date, freeseat in mySeats %}
+                <tr>
+                    <td> {{ train_id }} </td>
+                    <td> {{ segment_id }} </td>
+                    <td> {{ seat_free_date }} </td>
+                    <td> {{ freeseat }} </td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 </body>

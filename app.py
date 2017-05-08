@@ -73,15 +73,9 @@ def request_loader(request):
 # renders index page index.html
 @app.route('/', methods=['get', 'post'])
 def home():
-    ob = db.cursor()
-    query = 'SELECT stations.station_name FROM s17336team1.stations'
-    ob.execute(query)
-
     passengers = num_passengers()  # generate a list with max passenger number for reservation
 
-    fetchedStations = [r[0] for r in ob.fetchall()]  # break down data for stations
-
-    return render_template('index.html', my_stations=fetchedStations, numbers=passengers)
+    return render_template('index.html', numbers=passengers)
 
 @app.route('/passengers', methods=['get', 'post'])
 def passengers():
@@ -94,15 +88,27 @@ def passengers():
 
 @app.route('/reservations', methods=['get', 'post'])
 def reservations():
-    return render_template('reservations.html')
+    cur = db.cursor()
+    query = 'SELECT * FROM s17336team1.reservations'
+    cur.execute(query)
+    fetchedReservations = [(r[0], r[1], r[2], r[3], r[4]) for r in cur.fetchall()]
+    return render_template('reservations.html', myReservations=fetchedReservations)
 
 @app.route('/freeseats', methods=['get', 'post'])
 def freeseats():
-    return render_template('freeseats.html')
+    cur = db.cursor()
+    query = 'SELECT * FROM s17336team1.seats_free'
+    cur.execute(query)
+    fetchedSeats = [(r[0], r[1], r[2], r[3]) for r in cur.fetchall()]
+    return render_template('freeseats.html', mySeats=fetchedSeats)
 
 @app.route('/trips', methods=['get', 'post'])
 def trips():
-    return render_template('trips.html')
+    cur = db.cursor()
+    query = 'SELECT * FROM s17336team1.trips'
+    cur.execute(query)
+    fetchedTrips = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7]) for r in cur.fetchall()]
+    return render_template('trips.html', myTrips=fetchedTrips)
 
 # routes to the results upon query
 @app.route('/result', methods=['get', 'post'])
@@ -154,13 +160,18 @@ def getlogin():
 
     fetchPass = [r[0] for r in cur.fetchall()]
 
+    ob = db.cursor()
+    query = 'SELECT stations.station_name FROM s17336team1.stations'
+    ob.execute(query)
+    fetchedStations = [r[0] for r in ob.fetchall()]  # break down data for stations
+
     passengers = num_passengers()
 
     if check_password_hash(fetchPass[0], passwrd):
         user = User()
         user.id = email
         login_user(user)
-        return render_template('success.html', numbers=passengers)
+        return render_template('success.html', numbers=passengers, myStations=fetchedStations)
     else:
         flash('Incorrect Password.')
         return redirect(url_for('login'))

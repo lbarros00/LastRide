@@ -27,8 +27,31 @@
               <li role="presentation"><a href="/trips">Trips</a></li>
             </ul>
         </div>
-        <div>
-            Trips
+        <div class="table-responsive">
+            <table class="table" style="font-size: 12px;">
+                <tr>
+                    <td><b>trip_id</b></td>
+                    <td><b>trip_date</b></td>
+                    <td><b>trip_seg_start</b></td>
+                    <td><b>trip_seg_ends</b></td>
+                    <td><b>fare_type</b></td>
+                    <td><b>fare</b></td>
+                    <td><b>trip_train_id</b></td>
+                    <td><b>reservation_id</b></td>
+                </tr>
+                {% for trip_id, trip_date, trip_seg_start, trip_seg_ends, fare_type, fare, trip_train_id, reservation_id in myTrips %}
+                <tr>
+                    <td> {{ trip_id }} </td>
+                    <td> {{ trip_date }} </td>
+                    <td> {{ trip_seg_start }} </td>
+                    <td> {{ trip_seg_ends }} </td>
+                    <td> {{ fare_type }} </td>
+                    <td> {{ fare }} </td>
+                    <td> {{ trip_train_id }} </td>
+                    <td> {{ reservation_id }} </td>
+                </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 </body>
