@@ -1,5 +1,11 @@
-#this vresion takes quantities of adults, children, etc
-# and also displays the true total fare
+# The show trains procedure shows what trains are available
+# based on the trip date, time, and quantity of passengers, and origin and destination.
+# this version takes quantities of adults, children, etc
+# It displays a maximum of three trains
+# and also displays the true total fare based on 
+# passenger type and date of trips
+
+
 DROP FUNCTION IF EXISTS find_dest_arr_time;
 DROP FUNCTION IF EXISTS find_station_name;
 DROP PROCEDURE IF EXISTS show_trains;
@@ -25,23 +31,6 @@ BEGIN
 END//
 
 
-/*
-This is a draft procedure for showing available trains
- Will change based on GUI
-Idea is for the user to input in
-
-	Station_start;
-	station_end;
-	Date and time;
-	# of people;
-
-After being shown choices, users will select:
-The user at some point will also have to input in:
-
-paying_passenger_id;
-fare_type;
-payment credit card number;
-*/
 
 
 
@@ -51,8 +40,8 @@ CREATE PROCEDURE show_trains(f_trip_date DATE, f_trip_time TIME,
 							 )
 
 
-
-/*
+#This function prototype takes station ids as inputs (instead of station names); useful for debugging
+/* 
 CREATE PROCEDURE show_trains(f_trip_date DATE, f_trip_time TIME,
 							 f_station_start int, f_station_end int, 
 							 f_qty_adult int, f_qty_child int, f_qty_senior int, f_qty_military int 
@@ -63,12 +52,12 @@ BEGIN
 
 DECLARE isweekdaybool BOOLEAN;
 DECLARE f_direction BOOLEAN;
-DECLARE trainqty INT; #Number that holds number of availabe trains 
+DECLARE trainqty INT; 			#Number that holds number of availabe trains 
 DECLARE f_start_segment INT;
 DECLARE f_end_segment INT;
 DECLARE f_station_start INT;
 DECLARE f_station_end INT;
-DECLARE f_quantity INT; #holds total number of people
+DECLARE f_quantity INT; 		#holds total number of people
 
 SET f_station_start = (SELECT station_id FROM stations WHERE f_station_start_name = station_name);
 SET f_station_end = (SELECT station_id FROM stations WHERE f_station_end_name = station_name);

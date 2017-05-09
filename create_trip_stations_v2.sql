@@ -80,7 +80,7 @@ BEGIN
 	# First we check if we are able to add this trip
 	SET free_seat_bool_initial = free_seat_check(f_train_id, f_trip_date,f_trip_seg_start,f_trip_seg_ends,f_quantity);
 
-	#Check for free seats on both the initial and return trip
+	# We also need to check for free seats on return trip of the round_trip
 	# If it is not a roundtrip, then set the set the free_seat_bool_return to true
 
 	IF ((f_return_train_id != '' AND f_return_train_id IS NOT NULL) AND (f_return_trip_date !='' AND f_return_trip_date IS NOT NULL)) THEN
@@ -131,7 +131,7 @@ BEGIN
 		 #I'm going to assume that unless there's identity theft, only one person can make one reservation at give moment
 
 
-		SET base_fare = calc_base_fare_seg(f_trip_seg_start,f_trip_seg_ends); #initialize base_fare
+		SET base_fare = calc_base_fare(f_trip_station_start,f_trip_station_ends); #initialize base_fare
 
 		SET f_fare_type = 5; #pets
 

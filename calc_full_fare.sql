@@ -1,5 +1,8 @@
 # This function determines the full fare for a single passenger type on a given date
-# Decided to increase it by 1% per day up to 30% on the day of the travel
+# We decided to increase it by 1% per day up to 30% on the day of the trip
+# No discount is given for trips booked earlier than 30 days
+# Passenger type is also considered, with seniors, children, and military personnel
+# getting discounts.
 
 DROP FUNCTION IF EXISTS calc_full_fare;
 DELIMITER //
@@ -21,6 +24,10 @@ BEGIN
 
 	IF date_diff > 30 THEN
 		SET date_diff = 30 ;
+	END IF;
+
+	IF date_diff < 0 THEN
+		SET date_diff = 0 ;
 	END IF;
 
 	SET fare_discount = (SELECT rate from fare_types WHERE fare_id = f_fare_id );
