@@ -117,26 +117,30 @@ def result():
     fromstation = request.form['fromstation']
     dt = request.form['date']
     tm = request.form['time']
+    # tostationR = request.form['tostationR']
+    # fromstationR = request.form['fromstationR']
+    # dtR = request.form['dateR']
+    # tmR = request.form['timeR']
     adult = request.form['adult']
     child = request.form['child']
     senior = request.form['senior']
     military = request.form['military']
     pet = request.form['pet']
 
-    # station_id = db.cursor()
     cur = db.cursor()
-
-    # query = "SELECT stations.station_symbol FROM s17336team1.stations WHERE station_name LIKE '"+tostation+"';"
 
     # call procedure show_trains()
     cur.callproc('s17336team1.show_trains', [dt, tm, fromstation, tostation, adult, child, senior, military, pet])
-
-    # break down of data from show_trains()
     fetchedData = [(r[0], r[5], r[6], r[8]) for r in cur.fetchall()]
+
+    # cur2 = db.cursor()
+    # cur2.callproc('s17336team1.show_trains', [dtR, tmR, fromstationR, tostationR, adult, child, senior, military, pet])
+    #
+    # # break down of data from show_trains()
+    # fetchedDataR = [(r[0], r[5], r[6], r[8]) for r in cur2.fetchall()]
 
     # m refers to object in the database to be rendered in results
     return render_template('results.html', m=fetchedData, to=tostation, fromS=fromstation)
-
 
 @app.route('/login', methods=['get', 'post'])
 def login():
@@ -167,11 +171,15 @@ def getlogin():
 
     passengers = num_passengers()
 
+    myStations = []
+    myStations += ' '
+    myStations += fetchedStations
+
     if check_password_hash(fetchPass[0], passwrd):
         user = User()
         user.id = email
         login_user(user)
-        return render_template('success.html', numbers=passengers, myStations=fetchedStations)
+        return render_template('success.html', numbers=passengers, myStations=myStations)
     else:
         flash('Incorrect Password.')
         return redirect(url_for('login'))

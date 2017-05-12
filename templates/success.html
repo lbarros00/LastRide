@@ -47,33 +47,33 @@
                 <label>Depart at</label>
                 <input type="time" class="form-control" name="time"/>
                 <br/>
-{#                <div class="form-check">#}
-{#                  <label class="form-check-label">#}
-{#                    <input class="form-check-input" type="checkbox" value="">#}
-{#                    Round trip#}
-{#                  </label>#}
-{#                </div>#}
-{#                <label>From#}
-{#                    <span style="margin-left: 185px;"> To</span>#}
-{#                </label>#}
-{#                <br/>#}
-{#                <select name="fromstation" class="form-control" style="width: 210px; float: left; margin-right: 15.5px;">#}
-{#                    {% for station_name in myStations %}#}
-{#                      <option>{{ station_name }}</option>#}
-{#                    {% endfor %}#}
-{#                </select>#}
-{#                <select name="tostation" class="form-control" style="width: 210px; float: left;">#}
-{#                    {% for station_name in myStations %}#}
-{#                      <option>{{ station_name }}</option>#}
-{#                    {% endfor %}#}
-{#                </select>#}
-{#                <br/>#}
-{#                <label style="margin-top: 20px;">Date</label>#}
-{#                <input type="date" class="form-control" name="date"/>#}
-{#                <br/>#}
-{#                <label>Depart at</label>#}
-{#                <input type="time" class="form-control" name="time"/>#}
-{#                <br/>#}
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" value="">
+                    Round trip
+                  </label>
+                </div>
+                <label>From
+                    <span style="margin-left: 185px;"> To</span>
+                </label>
+                <br/>
+                <select name="fromstationR" class="form-control" style="width: 210px; float: left; margin-right: 15.5px;">
+                    {% for station_name in myStations %}
+                      <option>{{ station_name }}</option>
+                    {% endfor %}
+                </select>
+                <select name="tostationR" class="form-control" style="width: 210px; float: left;">
+                    {% for station_name in myStations %}
+                      <option>{{ station_name }}</option>
+                    {% endfor %}
+                </select>
+                <br/>
+                <label style="margin-top: 20px;">Date</label>
+                <input type="date" class="form-control" name="dateR"/>
+                <br/>
+                <label>Depart at</label>
+                <input type="time" class="form-control" name="timeR"/>
+                <br/>
                 <label style="text-align: center;">Adults
                     <span style="margin-left: 22px;"> Children</span>
                     <span style="margin-left: 22px;">Seniors</span>
