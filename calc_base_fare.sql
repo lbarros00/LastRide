@@ -1,3 +1,4 @@
+
 DROP FUNCTION IF EXISTS calc_base_fare;
 DELIMITER //
 
