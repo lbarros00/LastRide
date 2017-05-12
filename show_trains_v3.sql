@@ -16,6 +16,7 @@ DELIMITER //
 
 CREATE FUNCTION find_dest_arr_time(f_train_id INT,f_station_id INT)
 	RETURNS TIME
+	READS SQL DATA
 BEGIN
 	DECLARE arrival_time TIME;
 	SET arrival_time = (SELECT time_in from stops_at WHERE train_id = f_train_id AND f_station_id = station_id);
@@ -24,6 +25,7 @@ END//
 
 CREATE FUNCTION find_station_name(f_station_id INT)
 	RETURNS varchar(40)	
+	READS SQL DATA
 BEGIN
 	DECLARE stat_name varchar(40)	;
 	SET stat_name = (SELECT station_name from stations WHERE f_station_id = station_id);
@@ -38,6 +40,7 @@ CREATE PROCEDURE show_trains(f_trip_date DATE, f_trip_time TIME,
 							 f_station_start_name VARCHAR(40), f_station_end_name VARCHAR(40), 
 							 f_qty_adult int, f_qty_child int, f_qty_senior int, f_qty_military int , f_qty_pets int
 							 )
+	READS SQL DATA
 
 
 #This function prototype takes station ids as inputs (instead of station names); useful for debugging

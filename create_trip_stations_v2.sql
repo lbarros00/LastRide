@@ -16,6 +16,7 @@ CREATE PROCEDURE create_trip_stations(f_train_id int, f_trip_date DATE,
 							 f_paying_passenger_id INT,
 							 f_card_number VARCHAR(16), f_billing_address varchar(100),
 							 f_return_train_id int, f_return_trip_date DATE)
+	NOT DETERMINISTIC
 BEGIN
 
 

@@ -2,6 +2,7 @@ DROP PROCEDURE IF EXISTS free_seat_decrement;
 DELIMITER //
 
 CREATE PROCEDURE free_seat_decrement(f_train_id int, f_seat_free_date DATE, start_segment int, end_segment int, quantity int)
+MODIFIES SQL DATA
 
 
 BEGIN

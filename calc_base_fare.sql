@@ -4,6 +4,7 @@ DELIMITER //
 
 CREATE FUNCTION calc_base_fare(start_station int, end_station int)
 RETURNS DECIMAL(7,2)
+READS SQL DATA
 
 BEGIN
 

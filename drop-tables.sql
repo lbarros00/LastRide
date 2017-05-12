@@ -17,6 +17,7 @@
 drop procedure if exists drop_tables;
 DELIMITER //
 create procedure drop_tables()
+MODIFIES SQL DATA
 begin
     SET FOREIGN_KEY_CHECKS = 0; #Technically bad practice
 	drop table if exists 
