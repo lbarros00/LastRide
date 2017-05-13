@@ -11,6 +11,9 @@ def create_db():
     try:
         db = MySQLdb.connect(
                 host='127.0.0.1',
+                # Arbitrarily chosen as the local port for tunneling
+                # into linux lab database server.
+                port=40000,
                 user='S17336aibrahi',
                 passwd='15349397',
                 db='S17336team1')
