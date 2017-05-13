@@ -103,35 +103,65 @@ INSERT INTO passengers
 	(fname, lname, email, password,
 		preferred_card_number, preferred_billing_address)
 	VALUES
+	/* SCFX6Ihqkmjwald */
 	('Toney', 'Bode',
-		'Destin_Murray@hotmail.com', 'SCFX6Ihqkmjwald', '1877350172123759',
+		'Destin_Murray@hotmail.com',
+		'pbkdf2:sha256:50000$AtTcBIpt$cf57286973d455fcc88f3fe4d0e50e58886ad4d2eafd1fe1585cb5a9bf93c8e8',
+		'1877350172123759',
 		'199 August Locks, Kulasland, MO, 55636'),
+	/* VeicVYnUdFJi3u3 */
 	('Santa', 'Runolfsson',
-		'Titus.Larson@gmail.com', 'VeicVYnUdFJi3u3', '7875710503167178',
+		'Titus.Larson@gmail.com',
+		'pbkdf2:sha256:50000$NxYAgISl$95bbd335d769abfc8575a8653aa6141b7f37614861a7a5044c898f06e8be1511',
+		'7875710503167178',
 		'277 Damaris Pine, New Edtown, TN, 57814-3806'),
+	/* DSjBZsEPdpWuj3P */
 	('Meggie', 'Kessler',
-		'Jared.Fisher@yahoo.com', 'DSjBZsEPdpWuj3P', '8629818299344484',
+		'Jared.Fisher@yahoo.com',
+		'pbkdf2:sha256:50000$n75W1Kle$68bbdcdbd1493e2e3105447fe25323b4aecfbddf37108ff021b2d02da755aaa7',
+		'8629818299344484',
 		'981 Treutel Ranch, Lurafurt, RI, 25363-4827'),
+	/* cOVm3_je1A5Z2e_ */
 	('Nora', 'Mueller',
-		'Andy_Morissette@gmail.com', 'cOVm3_je1A5Z2e_', '5409810587723073',
+		'Andy_Morissette@gmail.com',
+		'pbkdf2:sha256:50000$Uj7k1xDv$bf39e5ce02d8f46f9e5aa31d8058c91ea19d7d8239cb5c6ffefe64495d0ddc1a',
+		'5409810587723073',
 		'339 Considine Parks, Simonisside, CO, 76146'),
+	/* Qh9v9N2OXDskbd6 */
 	('Travis', 'Bernhard',
-		'Dale.Herman@hotmail.com', 'Qh9v9N2OXDskbd6', '7354170072172444',
+		'Dale.Herman@hotmail.com',
+		'pbkdf2:sha256:50000$8KYCRCMs$290ab7f57b4ae25d54400a912f58d3d3cf4b24f8ee7a3bb78994ee37e1c1e73e',
+		'7354170072172444',
 		'697 Amber Haven, South Shanny, NM, 40307'),
+	/* KmsbSP3CVfJcFFv */
 	('Dayne', 'Herman',
-		'Kristopher27@gmail.com', 'KmsbSP3CVfJcFFv', '8529398445304419',
+		'Kristopher27@gmail.com',
+		'pbkdf2:sha256:50000$LoevdK6t$f9afd332f777c24d65143ccacaf0341f40ff3eb8dcd322bcc8d21ba17c126996',
+		'8529398445304419',
 		'4156 Major Extensions, Port Linwood, VA, 74248-3694'),
+	/* bHTjYvhUZN12P9S */
 	('Sabina', 'Baumbach',
-		'Madison_Macejkovic52@gmail.com', 'bHTjYvhUZN12P9S', '7139810856116347',
+		'Madison_Macejkovic52@gmail.com',
+		'pbkdf2:sha256:50000$fxaQ3Y2Y$f72973a82025f9f24940254ff880538e01707d21ee3702dc873dff813fe37909',
+		'7139810856116347',
 		'806 Eulalia Drive, Port Aurelioview, NM, 88537'),
+	/* Q7p6pGiFnPZUGOI */
 	('Lillie', 'Goodwin',
-		'Waldo.Corwin11@gmail.com', 'Q7p6pGiFnPZUGOI', '9179502340722140',
+		'Waldo.Corwin11@gmail.com',
+		'pbkdf2:sha256:50000$C7GfhQSk$c223d63fe9fefc5a0e650e12c0405becd10c08fff4d32d564f35d44b0ce80273',
+		'9179502340722140',
 		'62297 Francesco Loaf, West Annalise, KY, 72618-8794'),
+	/* mnkHE7l1PiSD5WK */
 	('Levi', 'Treutel',
-		'Laurence.Harvey92@hotmail.com', 'mnkHE7l1PiSD5WK', '4199137757992227',
+		'Laurence.Harvey92@hotmail.com',
+		'pbkdf2:sha256:50000$FY7JGhSW$c889308b856eca5cc2988f421a9629452a41ade20a2ed5e48e165e8b09325e74',
+		'4199137757992227',
 		'37836 Sid Springs, West Eryn, OK, 51005'),
+	/* yJVW4TlTN8AgHDt */
 	('Berniece', 'Bahringer',
-		'Lila_Windler27@hotmail.com', 'yJVW4TlTN8AgHDt', '4040347550819945',
+		'Lila_Windler27@hotmail.com',
+		'pbkdf2:sha256:50000$h6xNvIW7$378d22298165cc74896f28bbab6fb850d256b57a2396db55be6e4c13f7a5f1cb',
+		'4040347550819945',
 		'747 Terry Fort, South Mervinchester, NJ, 58722-4878');
 
 /* }}} ****************************************************/
