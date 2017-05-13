@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Results</title>
+    <title>Results for Round Trip</title>
     <link href="https://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
 </head>
@@ -17,7 +17,7 @@
             </nav>
             <h3 class="text-muted">LastRide</h3>
         </div>
-        <h4>Results from <u>{{ fromS }}</u> to <u>{{ to }}</u>:</h4>
+        <h4>Results from <u>{{ fromR }}</u> to <u>{{ toR }}</u>:</h4>
         <br/>
         <table class="table table-inverse" style="font-size: 14px; text-align: center; border-bottom: solid;">
                 <tr>
@@ -27,36 +27,16 @@
                     <td style="width: 100px;"> <b>Total Fare</b> </td>
                     <td style="width: 100px;"> </td>
                 </tr>
-                {% for train_id, leaves, arrives, fare in m %}
+                {% for train_id, leaves, arrives, fare in r %}
                     <tr>
                         <td style="width: 90px;"> {{ train_id }} </td>
                         <td style="width: 100px;"> {{ leaves }} </td>
                         <td style="width: 100px;"> {{ arrives }} </td>
                         <td style="width: 50px;"> {{ fare }} </td>
-                        <td style="width: 50px;"> <a href="/roundtrip" class="btn btn-default" action="/roundtrip" method="post" name="roundtrip">Reserve</a> </td>
+                        <td style="width: 50px;"> <a href="/finish_booking" class="btn btn-default" action="/finish_booking" method="post" name="roundtrip">Book</a> </td>
                     </tr>
                 {% endfor %}
         </table>
-{#        <h4>Results from <u>{{ fromR }}</u> to <u>{{ toR }}</u>:</h4>#}
-{#        <br/>#}
-{#        <table class="table table-inverse" style="font-size: 14px; text-align: center; border-bottom: solid;">#}
-{#                <tr>#}
-{#                    <td style="width: 10px;"> <b>Train ID</b> </td>#}
-{#                    <td style="width: 100px;"> <b>Departs at {{ station }}</b> </td>#}
-{#                    <td style="width: 100px;"> <b>Arrives at</b> </td>#}
-{#                    <td style="width: 100px;"> <b>Total Fare</b> </td>#}
-{#                    <td style="width: 100px;"> </td>#}
-{#                </tr>#}
-{#                {% for train_id, leaves, arrives, fare in r %}#}
-{#                    <tr>#}
-{#                        <td style="width: 90px;"> {{ train_id }} </td>#}
-{#                        <td style="width: 100px;"> {{ leaves }} </td>#}
-{#                        <td style="width: 100px;"> {{ arrives }} </td>#}
-{#                        <td style="width: 50px;"> {{ fare }} </td>#}
-{#                        <td style="width: 50px;"> <button class="btn btn-default" action="/roundtrip" method="post" name="roundtrip">Reserve</button> </td>#}
-{#                    </tr>#}
-{#                {% endfor %}#}
-{#        </table>#}
     </div>
 </body>
 </html>
