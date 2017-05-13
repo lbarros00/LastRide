@@ -1,4 +1,5 @@
 import MySQLdb
+import config # config.py, where our configuration variables are stored.
 from flask import Flask, request, render_template
 import datetime
 import calendar
@@ -16,45 +17,55 @@ def add_days(sourcedate, months, days):
 app = Flask(__name__)
 
 # Source: https://cloud.google.com/appengine/docs/standard/python/cloud-sql/
-def connect_to_cloudsql():
-    # These environment variables are configured in app.yaml.
-    CLOUDSQL_CONNECTION_NAME = os.environ.get('CLOUDSQL_CONNECTION_NAME')
-    CLOUDSQL_USER = os.environ.get('CLOUDSQL_USER')
-    CLOUDSQL_PASSWORD = os.environ.get('CLOUDSQL_PASSWORD')
+def create_db():
+    # I can't detect local/live conditions yet, so for now I'll just use
+    # try/catch blocks with more local options being fallbacks.
 
-    # When deployed to App Engine, the `SERVER_SOFTWARE` environment variable
-    # will be set to 'Google App Engine/version'.
-    if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-        # Connect using the unix socket located at
-        # /cloudsql/cloudsql-connection-name.
-        cloudsql_unix_socket = os.path.join(
-            '/cloudsql', CLOUDSQL_CONNECTION_NAME)
-
+    # Try to connect as if deployed on GCP.
+    try:
         db = MySQLdb.connect(
-            unix_socket=cloudsql_unix_socket,
-            user=CLOUDSQL_USER,
-            passwd=CLOUDSQL_PASSWORD)
-
-    # If the unix socket is unavailable, then try to connect using TCP. This
-    # will work if you're running a local MySQL server or using the Cloud SQL
-    # proxy, for example:
-    #
-    #   $ cloud_sql_proxy -instances=your-connection-name=tcp:3306
-    #
-    # If this was started using dev_appserver.py or on GCP
-    elif CLOUDSQL_USER and CLOUDSQL_PASSWORD:
+            unix_socket='/cloudsql/{connection}'.format(
+                connection=config.CLOUDSQL_CONNECTION_NAME
+                ),
+                user=config.CLOUDSQL_USER,
+                passwd=config.CLOUDSQL_PASSWORD,
+                db=config.CLOUDSQL_DATABASE
+            )
+        return db
+    except Exception as e:
+        print("Not connecting on live environment.")
+        print("Reason: {}".format(e))
+    
+    # Try to connect as if google-cloud-proxy is running.
+    try:
         db = MySQLdb.connect(
-            host='127.0.0.1', user=CLOUDSQL_USER, passwd=CLOUDSQL_PASSWORD)
-    # If this is being run on Laisa's computer.
-    else:
-        db = MySQLdb.connect("localhost", "root", "", "team1")  # connects to the database
+                host="127.0.0.1",
+                user=config.CLOUDSQL_USER,
+                passwd=config.CLOUDSQL_PASSWORD,
+                db=config.CLOUDSQL_DATABASE
+            )
+        return db
+    except Exception as e:
+        print("Couldn't connect to GCP DB through cloud-sql-proxy")
+        print("Reason: {}".format(e))
 
-    return db
+    # Try to connect to Laisa's local database.
+    try:
+        db = MySQLdb.connect(
+                "localhost",
+                "root",
+                "",
+                "team1")  # connects to the database
+        return db
+    except Exception as e:
+        print("Not able to connect to any of the databases.")
+        print("Reason: {}".format(e))
+        raise
 
 @app.route('/', methods=['get', 'post'])
 def home():  # index page index.html
 
-    db = connect_to_cloudsql()
+    db = create_db()
     ob = db.cursor()
     query = 'SELECT stations.station_name FROM s17336team1.stations'
     ob.execute(query)
@@ -77,7 +88,7 @@ def home():  # index page index.html
 @app.route('/result', methods=['post'])
 def result():  # routes to the results upon query
     station = request.form['station']
-    db = MySQLdb.connect("localhost", "root", "", "team1")  # connects to the database
+    db = create_db()
     ob = db.cursor()
     query = 'SELECT stations.station_name FROM s17336team1.stations'
     ob.execute(query)
@@ -92,6 +103,13 @@ def login():
 @app.route('/register', methods=['get', 'post'])
 def register():
     return render_template('register.html')
+
+@app.errorhandler(500)
+def server_error(e):
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':
