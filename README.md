@@ -16,22 +16,30 @@ Once you have all the required packages installed just run: <br/>
 python app.py
 <br/>
 
-## Index Page (defined in 'index.html' within the templates directory)
+## Index Page 
 
-This is the initial page you see when you open the app. It provides you with some of the tables within the database so that you can see what has been modified within the table.
-These tables are passengers, reservations, free seats, and trips. <br/>
+This is the initial page (defined in 'templates/index.html') you see when you open the app. It provides you with some of the tables within the database so that you can see what has been modified within the table.
+These tables are passengers ('templates/passengers.html'), reservations ('templates/reservations.html'), free seats ('templates/freeseats.html'), and trips ('templates/trips.html'). <br/>
 <br/>
 
-## Register (defined in 'register.html' within the templates directory)
+## Register
 
-Allows you to register as a user to save reservations you have made.
+The register page (defined in 'templates/register.html') allows you to register as a user to save reservations you have made.
 
-## Login (defined in 'login.html' within the templates directory)
+## Login
 
-Upon login you can find a trip (defined in 'success.html' within the templates directory).
+Upon login (defined in 'templates/login.html') you can find a trip by being redirected to the dashboard (defined in 'templates/success.html').
 
-## Results (defined in 'results.html' within the templates directory)  
+## Results 
 
-Results are shown (show_trains_v3.sql) for one way or round trip. Upon selecting your trip (create_trip_stations_v2.sql), you can now have a reservation number for which you will be able to cancel (trip_res_cancel_v2.sql) it if you no longer wish to travel.
+This page (defined in 'templates/results.html') retrives the results from (database/show_trains_v3.sql) for one way trip. 
+
+## Round Trip
+
+Upon selecting your one way trip, you are redirected to a new page (defined in 'templates/roundtrip.html') where you can either select a round trip and be redirected to the results for your round trip (defined in 'templates/results_roundtrip.html') or you can finalize your booking (defined in 'templates/finish_booking.html'). 
+
+## Finish Booking and Reservations
+
+By clicking book your trip, we are creating a trip and reservation ID (database/create_trip_stations_v2.sql), you can now have a reservation number for which you will be able to cancel (database/trip_res_cancel_v2.sql) it if you no longer wish to travel in the page defined in 'templates/reservation_number.html'
 
 ## Enjoy the ride!
