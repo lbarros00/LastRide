@@ -21,7 +21,7 @@ Once you have all the required packages installed just run: <br/>
 
 This is the initial page (defined in 'templates/index.html') you see when you open the app. It provides you with some of the tables within the database so that you can see what has been modified within the table.
 These tables are passengers ('templates/passengers.html'), reservations ('templates/reservations.html'), free seats ('templates/freeseats.html'), and trips ('templates/trips.html'). <br/>
-<br/>
+
 
 ## Register
 
