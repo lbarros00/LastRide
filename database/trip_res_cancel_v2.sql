@@ -9,6 +9,7 @@ DELIMITER //
 
 
 CREATE PROCEDURE trip_cancel(f_trip_id int)
+MODIFIES SQL DATA
 BEGIN
 
 	DECLARE qty_trips INT; # used to test if we should delete corresponding reservation
@@ -68,6 +69,7 @@ END//
 
 
 CREATE PROCEDURE res_cancel(f_reservation_id int)
+MODIFIES SQL DATA
 #This is a procedure that deletes a reservation
 # ALL linked trips will be cancelled too
 BEGIN

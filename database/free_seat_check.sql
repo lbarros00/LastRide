@@ -3,6 +3,7 @@ DELIMITER //
 
 CREATE FUNCTION free_seat_check(f_train_id int, f_seat_free_date DATE, start_segment int, end_segment int, quantity int)
 RETURNS BOOLEAN
+READS SQL DATA
 
 BEGIN
 

@@ -19,6 +19,7 @@ CREATE FUNCTION is_weekday(d date)
 
 DELIMITER //
 CREATE PROCEDURE generate_free_seats(in start_date date)
+MODIFIES SQL DATA
 begin
 	/* DECLARE start_date date DEFAULT CURDATE() */
 	DECLARE end_date date;
@@ -41,7 +42,7 @@ begin
 		SET curdate = DATE_ADD(curdate, INTERVAL 1 DAY);
 	END WHILE;
 
-	/* The entires in seats_free is the cross product of dates, segments
+	/* The entries in seats_free is the cross product of dates, segments
 	 * and trains, such that the train runs on the date and the train travels   *
 	 * that segment.
 	 */

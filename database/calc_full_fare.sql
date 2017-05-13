@@ -9,6 +9,7 @@ DELIMITER //
 
 CREATE FUNCTION calc_full_fare(f_trip_date DATE,f_fare_id int, f_base_fare DECIMAL(7,2) )
 RETURNS DECIMAL(7,2)
+READS SQL DATA
 
 BEGIN
 
