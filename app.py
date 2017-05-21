@@ -5,50 +5,48 @@ from flask import Flask, flash, request, render_template, redirect, url_for, ses
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-db = MySQLdb.connect("localhost", "root", "", "s17336team1")
-#
-# def create_db():
-#     # First, try to connect to the linux lab. If that fails, try to
-#     # connect to a testing computer.
-#     try:
-#         db = MySQLdb.connect(
-#                 host='127.0.0.1',
-#                 # Arbitrarily chosen as the local port for tunneling
-#                 # into linux lab database server.
-#                 port=40000,
-#                 user='S17336aibrahi',
-#                 passwd='15349397',
-#                 db='s17336team1')
-#         return db
-#     except Exception as e:
-#         print("Could not connect to linux lab database.")
-#         print("Reason:", e)
-#
-#     try:
-#         db = MySQLdb.connect("localhost", "root", "", "s17336team1")
-#         return db
-#     except Exception as e:
-#         print("Could not connect to local testing database.")
-#         print("Reason:", e)
-#
-#     # Connection to the raspberry pi database.
-#     try:
-#         db = MySQLdb.connect(
-#                 host="localhost",
-#                 user="lastride",
-#                 passwd="lastridebestride",
-#                 db="s17336team1"
-#                 )
-#         return db
-#     except Exception as e:
-#         print("Could not connect to local production database.")
-#         print("Reason:", e)
-#
-#
-#     print("Could not connect to any database.")
-#     raise
-#
-# db = create_db()
+def create_db():
+    # First, try to connect to the linux lab. If that fails, try to
+    # connect to a testing computer.
+    try:
+        db = MySQLdb.connect(
+                host='127.0.0.1',
+                # Arbitrarily chosen as the local port for tunneling
+                # into linux lab database server.
+                port=40000,
+                user='S17336aibrahi',
+                passwd='15349397',
+                db='s17336team1')
+        return db
+    except Exception as e:
+        print("Could not connect to linux lab database.")
+        print("Reason:", e)
+
+    try:
+        db = MySQLdb.connect("localhost", "root", "", "s17336team1")
+        return db
+    except Exception as e:
+        print("Could not connect to local testing database.")
+        print("Reason:", e)
+
+    # Connection to the raspberry pi database.
+    try:
+        db = MySQLdb.connect(
+                host="localhost",
+                user="lastride",
+                passwd="lastridebestride",
+                db="s17336team1"
+                )
+        return db
+    except Exception as e:
+        print("Could not connect to local production database.")
+        print("Reason:", e)
+
+
+    print("Could not connect to any database.")
+    raise
+
+db = create_db()
 
 # generate number of passengers to be input in a reservation
 def num_passengers():
