@@ -16,20 +16,21 @@ def create_db():
                 port=40000,
                 user='S17336aibrahi',
                 passwd='15349397',
-                db='S17336team1')
+                db='s17336team1')
         return db
     except Exception as e:
         print("Could not connect to linux lab database.")
         print("Reason:", e)
 
     try:
-        db = MySQLdb.connect("localhost", "root", "", "S17336team1")
+        db = MySQLdb.connect("localhost", "root", "", "s17336team1")
         return db
     except Exception as e:
         print("Could not connect to local testing database.")
         print("Reason:", e)
-        print("Could not connect to any database.")
-        raise
+
+    print("Could not connect to any database.")
+    raise
 
 db = create_db()
 
@@ -64,7 +65,7 @@ def get_address():
 # get all emails in the passengers table
 def giveMyUsers():
     cur = db.cursor()
-    users = 'SELECT passengers.email from S17336team1.passengers;'
+    users = 'SELECT passengers.email from s17336team1.passengers;'
     cur.execute(users)
     fetchUsers = [r[0] for r in cur.fetchall()]
     return fetchUsers
@@ -106,7 +107,7 @@ def request_loader(request):
     user.id = email
 
     cur = db.cursor()
-    passes = "SELECT passengers.password from S17336team1.passengers WHERE email LIKE '"+email+"';"
+    passes = "SELECT passengers.password from s17336team1.passengers WHERE email LIKE '"+email+"';"
     cur.execute(passes)
 
     fetchPass = [r[0] for r in cur.fetchall()]
@@ -126,7 +127,7 @@ def home():
 @app.route('/passengers', methods=['get', 'post'])
 def passengers():
     cur = db.cursor()
-    query = 'SELECT * FROM S17336team1.passengers'
+    query = 'SELECT * FROM s17336team1.passengers'
     cur.execute(query)
     fetchPassengersData = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6]) for r in cur.fetchall()]
 
@@ -135,7 +136,7 @@ def passengers():
 @app.route('/reservations', methods=['get', 'post'])
 def reservations():
     cur = db.cursor()
-    query = 'SELECT * FROM S17336team1.reservations'
+    query = 'SELECT * FROM s17336team1.reservations'
     cur.execute(query)
     fetchedReservations = [(r[0], r[1], r[2], r[3], r[4]) for r in cur.fetchall()]
     return render_template('reservations.html', myReservations=fetchedReservations)
@@ -143,7 +144,8 @@ def reservations():
 @app.route('/freeseats', methods=['get', 'post'])
 def freeseats():
     cur = db.cursor()
-    query = 'SELECT * FROM S17336team1.seats_free'
+    #query = 'SELECT * FROM s17336team1.seats_free'
+    query = 'SELECT * FROM s17336team1.seats_free where freeseat <> 448'
     cur.execute(query)
     fetchedSeats = [(r[0], r[1], r[2], r[3]) for r in cur.fetchall()]
     return render_template('freeseats.html', mySeats=fetchedSeats)
@@ -151,7 +153,7 @@ def freeseats():
 @app.route('/trips', methods=['get', 'post'])
 def trips():
     cur = db.cursor()
-    query = 'SELECT * FROM S17336team1.trips'
+    query = 'SELECT * FROM s17336team1.trips'
     cur.execute(query)
     fetchedTrips = [(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7]) for r in cur.fetchall()]
     return render_template('trips.html', myTrips=fetchedTrips)
@@ -260,7 +262,7 @@ def result():
 
 
     # cur2 = db.cursor()
-    # cur2.callproc('S17336team1.show_trains', [dtR, tmR, fromstationR, tostationR, adult, child, senior, military, pet])
+    # cur2.callproc('s17336team1.show_trains', [dtR, tmR, fromstationR, tostationR, adult, child, senior, military, pet])
     #
     # # break down of data from show_trains()
     # fetchedDataR = [(r[0], r[5], r[6], r[8]) for r in cur2.fetchall()]
@@ -286,13 +288,14 @@ def getlogin():
 
     # check whether or not password matches with the email
     cur = db.cursor()
-    passes = "SELECT passengers.password from S17336team1.passengers WHERE email LIKE '" + email + "';"
+    passes = "SELECT passengers.password from s17336team1.passengers WHERE email LIKE '" + email + "';"
     cur.execute(passes)
 
     fetchPass = [r[0] for r in cur.fetchall()]
+    print(fetchPass) #DEBUG
 
     ob = db.cursor()
-    query = 'SELECT stations.station_name FROM S17336team1.stations'
+    query = 'SELECT stations.station_name FROM s17336team1.stations'
     ob.execute(query)
     fetchedStations = [r[0] for r in ob.fetchall()]  # break down data for stations
 
@@ -302,6 +305,8 @@ def getlogin():
     myStations += ' '
     myStations += fetchedStations
 
+    # TODO: This causes a problem if the email didn't match at all. Add
+    # logic to handle that.
     if check_password_hash(fetchPass[0], passwrd):
         user = User()
         user.id = email
@@ -330,14 +335,14 @@ def getUser():
     pw = generate_password_hash(passwrd)
 
     em = db.cursor()
-    check_email = "SELECT passengers.email from S17336team1.passengers WHERE email LIKE '"+email+"';"
+    check_email = "SELECT passengers.email from s17336team1.passengers WHERE email LIKE '"+email+"';"
     em.execute(check_email)
     fetchEmail = [r[0] for r in em.fetchall()]
 
     # check whether or not email already exists
     if not fetchEmail:
         ob = db.cursor()
-        query = ("INSERT INTO S17336team1.passengers" +
+        query = ("INSERT INTO s17336team1.passengers" +
                  "(fname, lname, email, password, preferred_card_number, preferred_billing_address)" +
                  "VALUES ('{}', '{}', '{}', '{}', '{}', '{}');").format(first, last, email, pw, cardNum, address)
         ob.execute(query)
@@ -352,7 +357,6 @@ def getUser():
         else:
             flash('Please fill out blank fields.')
         return redirect(url_for('register'))
-
 
 if __name__ == '__main__':
     app.run()

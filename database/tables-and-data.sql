@@ -27,7 +27,7 @@ CREATE TABLE passengers (
 	lname varchar(100),
 	email varchar(100),
 	/* acct_name varchar(30), */
-	password varchar(75), /* password */
+	password varchar(100), /* password hash, 93 characters long (so far). */
 	preferred_card_number varchar(16), /* at most 16 digit card numbers */
 	preferred_billing_address varchar(100)
 	);
