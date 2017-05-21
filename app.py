@@ -6,8 +6,8 @@ from flask_login import LoginManager, UserMixin, login_required, login_user, log
 from werkzeug.security import generate_password_hash, check_password_hash
 
 def create_db():
-    # First, try to connect to the linux lab. If that fails, try to connect to
-    # a testing computer.
+    # First, try to connect to the linux lab. If that fails, try to
+    # connect to a testing computer.
     try:
         db = MySQLdb.connect(
                 host='127.0.0.1',
@@ -28,6 +28,20 @@ def create_db():
     except Exception as e:
         print("Could not connect to local testing database.")
         print("Reason:", e)
+
+    # Connection to the raspberry pi database.
+    try:
+        db = MySQLdb.connect(
+                host="localhost",
+                user="lastride",
+                passwd="lastridebestride",
+                db="s17336team1"
+                )
+        return db
+    except Exception as e:
+        print("Could not connect to local production database.")
+        print("Reason:", e)
+
 
     print("Could not connect to any database.")
     raise
@@ -243,6 +257,7 @@ def createTrip():
     my_cur = db.cursor()
     my_cur.callproc('s17336team1.create_trip_stations', [train_idGO, dt, fromstation, tostation, adult, child, senior,
                                                       military, pet, pass_id, card_num, bill_addr, train_idBACK, dtR])
+    db.commit()
 
     return redirect(url_for('reservation_number'))
 
@@ -384,6 +399,17 @@ def getUser():
         else:
             flash('Please fill out blank fields.')
         return redirect(url_for('register'))
+
+# Required for connection through mod_wsgi instead of direct running.
+application=app
+
+@app.errorhandler(500)
+def error_500(e):
+    return "<h1>500 Error! Kill Yourself</h1> <p>{}</p>".format(e), 500
+
+@app.errorhandler(Exception)
+def catchall_error(e):
+    return "<h1>General Incompetence! Kill Yourself</h1> <p>{}</p>".format(e), 500
 
 if __name__ == '__main__':
     app.run()
