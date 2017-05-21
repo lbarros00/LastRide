@@ -10,7 +10,8 @@
         <div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/">Home</a></li>
+                    <li role="presentation"><a href="/homepage" action="/homepage" method="post">Home</a></li>
+                    <li role="presentation"><a href="/">Tables</a></li>
                     <li role="presentation"><a href="/reservation_number" action="/reservation_number" method="post">My Reservations</a></li>
                     <li role="presentation"><a href="/login" action="/logout" method="post">Logout</a></li>
                 </ul>
@@ -27,6 +28,15 @@
                     <td style="width: 100px;"> <b>Total Fare</b> </td>
                     <td style="width: 100px;"> </td>
                 </tr>
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div>
+                    {% for message in messages %}
+                      <p style="color: red; font-size: 18px;">{{ message }}</p>
+                    {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
                 {% for train_id, leaves, arrives, fare in m %}
                     <tr>
                         <td style="width: 90px;"> {{ train_id }} </td>

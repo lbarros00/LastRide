@@ -12,7 +12,8 @@
         <div class="header">
             <nav>
                 <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/">Home</a></li>
+                    <li role="presentation"><a href="/homepage" action="/homepage" method="post">Home</a></li>
+                    <li role="presentation"><a href="/">Tables</a></li>
                     <li role="presentation"><a href="/reservation_number" action="/reservation_number" method="post">My Reservations</a></li>
                     <li role="presentation"><a href="/login" action="/logout" method="post">Logout</a></li>
                 </ul>
@@ -50,32 +51,31 @@
                 <br/>
                 <input type="date" style="width: 210px; float: left;" class="form-control" name="date"/>
                 <span>
-                    <input type="time" style="width: 210px; margin-left: 15.5px; margin-bottom: 35px; float: left;" class="form-control" name="time"/>
+                    <input type="time" style="width: 210px; margin-left: 15.5px; margin-bottom: 25px; float: left;" class="form-control" name="time"/>
                 </span>
-                <br/>
-                <label style="text-align: center;">Adults
+                <label style="text-align: center; margin-left: 40px;">Adults
                     <span style="margin-left: 22px;"> Children</span>
                     <span style="margin-left: 22px;">Seniors</span>
                     <span style="margin-left: 22px;">Military</span>
                     <span style="margin-left: 22px;">Pets</span>
                 </label>
                 <br/>
-                <select name="adult" class="form-control" style="width: 65px; float: left; margin-right: 8px;">
+                <select name="adult" class="form-control" style="width: 65px; float: left; margin-left: 35px; margin-right: 10px;">
                     {% for num in numbers %}
                       <option>{{ num }}</option>
                     {% endfor %}
                 </select>
-                <select  name="child" class="form-control" style="width: 65px; float: left; margin-right: 8px;">
+                <select  name="child" class="form-control" style="width: 65px; float: left; margin-right: 10px;">
                     {% for num in numbers %}
                       <option>{{ num }}</option>
                     {% endfor %}
                 </select>
-                <select name="senior" class="form-control" style="width: 65px; float: left; margin-right: 7px;">
+                <select name="senior" class="form-control" style="width: 65px; float: left; margin-right: 10px;">
                     {% for num in numbers %}
                       <option>{{ num }}</option>
                     {% endfor %}
                 </select>
-                <select name="military" class="form-control" style="width: 65px; float: left; margin-right: 7px;">
+                <select name="military" class="form-control" style="width: 65px; float: left; margin-right: 10px;">
                     {% for num in numbers %}
                       <option>{{ num }}</option>
                     {% endfor %}
@@ -85,8 +85,9 @@
                       <option>{{ num }}</option>
                     {% endfor %}
                 </select>
-                <div style="text-align: center;">
-                    <input style="background-color: cadetblue; color: white; margin-bottom: 75px;" type="submit" class="btn btn-default" name="result"/>
+                <br/>
+                <div style="text-align: center; margin-top: 40px;">
+                    <input style="margin-bottom: 75px;" type="submit" class="btn btn-default" name="result"/>
                 </div>
             </form>
         </div>

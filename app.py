@@ -5,48 +5,50 @@ from flask import Flask, flash, request, render_template, redirect, url_for, ses
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
-def create_db():
-    # First, try to connect to the linux lab. If that fails, try to
-    # connect to a testing computer.
-    try:
-        db = MySQLdb.connect(
-                host='127.0.0.1',
-                # Arbitrarily chosen as the local port for tunneling
-                # into linux lab database server.
-                port=40000,
-                user='S17336aibrahi',
-                passwd='15349397',
-                db='s17336team1')
-        return db
-    except Exception as e:
-        print("Could not connect to linux lab database.")
-        print("Reason:", e)
-
-    try:
-        db = MySQLdb.connect("localhost", "root", "", "s17336team1")
-        return db
-    except Exception as e:
-        print("Could not connect to local testing database.")
-        print("Reason:", e)
-
-    # Connection to the raspberry pi database.
-    try:
-        db = MySQLdb.connect(
-                host="localhost",
-                user="lastride",
-                passwd="lastridebestride",
-                db="s17336team1"
-                )
-        return db
-    except Exception as e:
-        print("Could not connect to local production database.")
-        print("Reason:", e)
-
-
-    print("Could not connect to any database.")
-    raise
-
-db = create_db()
+db = MySQLdb.connect("localhost", "root", "", "s17336team1")
+#
+# def create_db():
+#     # First, try to connect to the linux lab. If that fails, try to
+#     # connect to a testing computer.
+#     try:
+#         db = MySQLdb.connect(
+#                 host='127.0.0.1',
+#                 # Arbitrarily chosen as the local port for tunneling
+#                 # into linux lab database server.
+#                 port=40000,
+#                 user='S17336aibrahi',
+#                 passwd='15349397',
+#                 db='s17336team1')
+#         return db
+#     except Exception as e:
+#         print("Could not connect to linux lab database.")
+#         print("Reason:", e)
+#
+#     try:
+#         db = MySQLdb.connect("localhost", "root", "", "s17336team1")
+#         return db
+#     except Exception as e:
+#         print("Could not connect to local testing database.")
+#         print("Reason:", e)
+#
+#     # Connection to the raspberry pi database.
+#     try:
+#         db = MySQLdb.connect(
+#                 host="localhost",
+#                 user="lastride",
+#                 passwd="lastridebestride",
+#                 db="s17336team1"
+#                 )
+#         return db
+#     except Exception as e:
+#         print("Could not connect to local production database.")
+#         print("Reason:", e)
+#
+#
+#     print("Could not connect to any database.")
+#     raise
+#
+# db = create_db()
 
 # generate number of passengers to be input in a reservation
 def num_passengers():
@@ -263,6 +265,31 @@ def createTrip():
 
     return redirect(url_for('reservation_number'))
 
+@app.route('/createonetrip', methods=['get', 'post'])
+def createonetrip():
+    train_idGO = session.get('train_idGO', None)
+
+    pass_id = get_passenger()
+    card_num = get_card()
+    bill_addr = get_address()
+
+    dt = session.get('dt', None)
+    fromstation = session.get('fromstation', None)
+    tostation = session.get('tostation', None)
+
+    adult = session.get('adult', None)
+    child = session.get('child', None)
+    senior = session.get('senior', None)
+    military = session.get('military', None)
+    pet = session.get('pet', None)
+
+    my_cur = db.cursor()
+    my_cur.callproc('s17336team1.create_trip_stations', [train_idGO, dt, fromstation, tostation, adult, child, senior,
+                                                      military, pet, pass_id, card_num, bill_addr, None, None])
+    db.commit()
+
+    return redirect(url_for('reservation_number'))
+
 @app.route('/results_roundtrips', methods=['get', 'post'])
 def results_roundtrips():
     fromstationR = session.get('tostation', None)
@@ -281,7 +308,11 @@ def results_roundtrips():
     # break down of data from show_trains()
     fetchedDataR = [(r[0], r[5], r[6], r[8]) for r in cur2.fetchall()]
 
-    return render_template('results_roundtrips.html', r=fetchedDataR, fromR=fromstationR, toR=tostationR)
+    if dtR == '' and tmR == '':
+        flash('Please go back and fill out the Return Date and Time')
+        return render_template('results_roundtrips.html')
+    else:
+        return render_template('results_roundtrips.html', r=fetchedDataR, fromR=fromstationR, toR=tostationR)
 
 # routes to the results upon query
 @app.route('/result', methods=['get', 'post'])
@@ -300,26 +331,25 @@ def result():
 
     # call procedure show_trains()
     cur.callproc('s17336team1.show_trains', [dt, tm, fromstation, tostation, adult, child, senior, military, pet])
-    #for train_id, departure, arrival, fare in cur.fetchall():
-    #    pass
+
     fetchedData = [(r[0], r[5], r[6], r[8]) for r in cur.fetchall()]
-
-
-    # cur2 = db.cursor()
-    # cur2.callproc('s17336team1.show_trains', [dtR, tmR, fromstationR, tostationR, adult, child, senior, military, pet])
-    #
-    # # break down of data from show_trains()
-    # fetchedDataR = [(r[0], r[5], r[6], r[8]) for r in cur2.fetchall()]
-
-
-    # m refers to object in the database to be rendered in results
-    return render_template('results.html', m=fetchedData, to=tostation, fromS=fromstation, dt=dt)
+    print child, senior
+    print (child > 0 or pet > 0) and (int(adult)==0 and int(senior)==0 and int(military)==0)
+    if not fetchedData or (int(adult)==0 and int(senior)==0 and int(military)==0 and int(child)==0 and int(pet)==0):
+        flash('Please fill out blank fields.')
+        return render_template('results.html')
+    elif (child > 0 or pet > 0) and (int(adult)==0 and int(senior)==0 and int(military)==0):
+        flash('Children and pets cannot travel alone.')
+        return render_template('results.html')
+    else:
+        # m refers to object in the database to be rendered in results
+        return render_template('results.html', m=fetchedData, to=tostation, fromS=fromstation, dt=dt)
 
 @app.route('/login', methods=['get', 'post'])
 def login():
     return render_template('login.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=['post'])
 def logout():
     logout_user()
     return redirect(url_for('login'))
@@ -336,7 +366,7 @@ def getlogin():
     cur.execute(passes)
 
     fetchPass = [r[0] for r in cur.fetchall()]
-    print(fetchPass) #DEBUG
+    # print(fetchPass) #DEBUG
 
     ob = db.cursor()
     query = 'SELECT stations.station_name FROM s17336team1.stations'
@@ -360,6 +390,20 @@ def getlogin():
         flash('Incorrect Password.')
         return redirect(url_for('login'))
 
+@app.route('/homepage', methods=['get', 'post'])
+def homepage():
+    ob = db.cursor()
+    query = 'SELECT stations.station_name FROM s17336team1.stations'
+    ob.execute(query)
+    fetchedStations = [r[0] for r in ob.fetchall()]  # break down data for stations
+
+    passengers = num_passengers()
+
+    myStations = []
+    myStations += ' '
+    myStations += fetchedStations
+
+    return render_template('success.html', numbers=passengers, myStations=myStations)
 
 # renders page where you can register for an account with LastRide
 @app.route('/register', methods=['get', 'post'])
