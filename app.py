@@ -231,6 +231,8 @@ def cancel():
     for trip_id in trip_IDs:
         cur.callproc('s17336team1.trip_cancel', [trip_id])
 
+    db.commit()
+
     return redirect(url_for('reservation_number'))
 
 @app.route('/createtrip', methods=['get', 'post'])
