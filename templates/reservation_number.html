@@ -18,14 +18,23 @@
             <h3 class="text-muted">LastRide</h3>
         </div>
         <div class="col-md-4 col-md-offset-4">
-            <h4 style="text-align: center;">Reservation Number:</h4>
+            <h4 style="text-align: center;">My Reservations</h4>
             <br/>
-            <form action="/dashboard" method="post">
-                <div style="text-align: center;">
-                    <button class="btn btn-default">Cancel</button>
-                </div>
-            </form>
         </div>
+        <table class="table table-inverse" style="font-size: 14px; text-align: center; border-bottom: solid;">
+                {% for reservation_id in res_id %}
+                <tr>
+                    <td style="width: 150px; padding-top: 25px;">Reservation ID</td>
+                    <td style="width: 290px; padding-top: 25px;">#{{ reservation_id }}</td>
+                    <td style="padding-top: 15px; padding-left: 100px;">
+                        <form action="/cancel" method="post">
+                            <input type="hidden" name="res_id" value="{{ reservation_id }}">
+                            <button class="btn btn-default">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
     </div>
 </body>
 </html>

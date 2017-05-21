@@ -62,6 +62,13 @@ def get_address():
     fetchPassAddr = [r[0] for r in ob.fetchall()]
     return fetchPassAddr[0]
 
+def get_tripID(my_var):
+    ob = db.cursor()
+    query = 'SELECT trips.trip_id from s17336team1.trips WHERE reservation_id=' +str(my_var)+ ';'
+    ob.execute(query)
+    fetchTripID = [r[0] for r in ob.fetchall()]
+    return fetchTripID
+
 # get all emails in the passengers table
 def giveMyUsers():
     cur = db.cursor()
@@ -190,7 +197,27 @@ def finish_booking():
 
 @app.route('/reservation_number', methods=['get', 'post'])
 def reservation_number():
-    return render_template('reservation_number.html')
+    pass_id = int(get_passenger())
+
+    cur = db.cursor()
+    query = 'SELECT reservations.reservation_id from S17336team1.reservations WHERE paying_passenger_id=' + str(
+        pass_id) + ';'
+    cur.execute(query)
+    reservation_id = [int(r[0]) for r in cur.fetchall()]
+    return render_template('reservation_number.html', res_id=reservation_id)
+
+
+@app.route('/cancel', methods=['get', 'post'])
+def cancel():
+    res_id = int(request.form['res_id'])
+
+    trip_IDs = get_tripID(res_id)
+
+    cur = db.cursor()
+    for trip_id in trip_IDs:
+        cur.callproc('s17336team1.trip_cancel', [trip_id])
+
+    return redirect(url_for('reservation_number'))
 
 @app.route('/createtrip', methods=['get', 'post'])
 def createTrip():
