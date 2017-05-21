@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import MySQLdb
 from flask import Flask, flash, request, render_template, redirect, url_for, session
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # connects to the database
@@ -14,6 +14,27 @@ def num_passengers():
     for i in range(16):
         number_of_passengers.append(i)
     return number_of_passengers
+
+def get_passenger():
+    ob = db.cursor()
+    pass_id = "SELECT passengers.passenger_id from s17336team1.passengers WHERE email LIKE '" + current_user.id + "';"
+    ob.execute(pass_id)
+    fetchPassID = [r[0] for r in ob.fetchall()]
+    return fetchPassID[0]
+
+def get_card():
+    ob = db.cursor()
+    card = "SELECT passengers.preferred_card_number from s17336team1.passengers WHERE email LIKE '" + current_user.id + "';"
+    ob.execute(card)
+    fetchPassCard = [r[0] for r in ob.fetchall()]
+    return fetchPassCard[0]
+
+def get_address():
+    ob = db.cursor()
+    addr = "SELECT passengers.preferred_billing_address from s17336team1.passengers WHERE email LIKE '" + current_user.id + "';"
+    ob.execute(addr)
+    fetchPassAddr = [r[0] for r in ob.fetchall()]
+    return fetchPassAddr[0]
 
 # get all emails in the passengers table
 def giveMyUsers():
@@ -112,6 +133,16 @@ def trips():
 
 @app.route('/roundtrip', methods=['get', 'post'])
 def roundtrip():
+    session['train_idGO'] = train_id = int(request.form['train_id'])
+
+    fromstationR = session.get('tostation', None)
+    tostationR = session.get('fromstation', None)
+    adult = session.get('adult', None)
+    child = session.get('child', None)
+    senior = session.get('senior', None)
+    military = session.get('military', None)
+    pet = session.get('pet', None)
+
     ob = db.cursor()
     query = 'SELECT stations.station_name FROM s17336team1.stations'
     ob.execute(query)
@@ -123,27 +154,55 @@ def roundtrip():
     myStations += ' '
     myStations += fetchedStations
 
-    return render_template('roundtrip.html', numbers=passengers, myStations=myStations)
+    return render_template('roundtrip.html', numbers=passengers, myStations=myStations, trainIDgo = train_id,
+                           toR=tostationR, fromR=fromstationR, a=adult, c=child, s=senior, mil=military, p=pet)
 
 @app.route('/finish_booking', methods=['get', 'post'])
 def finish_booking():
     return render_template('finish_booking.html')
 
 @app.route('/reservation_number', methods=['get', 'post'])
-def reservation_id():
+def reservation_number():
     return render_template('reservation_number.html')
+
+@app.route('/createtrip', methods=['get', 'post'])
+def createTrip():
+    session['train_idBACK'] = train_idBACK = int(request.form['train_id'])
+
+    train_idGO = session.get('train_idGO', None)
+
+    pass_id = get_passenger()
+    card_num = get_card()
+    bill_addr = get_address()
+
+    dt = session.get('dt', None)
+    dtR = session.get('dtR', None)
+    fromstation = session.get('fromstation', None)
+    tostation = session.get('tostation', None)
+
+    adult = session.get('adult', None)
+    child = session.get('child', None)
+    senior = session.get('senior', None)
+    military = session.get('military', None)
+    pet = session.get('pet', None)
+
+    my_cur = db.cursor()
+    my_cur.callproc('s17336team1.create_trip_stations', [train_idGO, dt, fromstation, tostation, adult, child, senior,
+                                                      military, pet, pass_id, card_num, bill_addr, train_idBACK, dtR])
+
+    return redirect(url_for('reservation_number'))
 
 @app.route('/results_roundtrips', methods=['get', 'post'])
 def results_roundtrips():
-    tostationR = request.form['tostationR']
-    fromstationR = request.form['fromstationR']
-    dtR = request.form['dateR']
+    fromstationR = session.get('tostation', None)
+    tostationR = session.get('fromstation', None)
+    session['dtR'] = dtR = request.form['dateR']
     tmR = request.form['timeR']
-    adult = request.form['adult']
-    child = request.form['child']
-    senior = request.form['senior']
-    military = request.form['military']
-    pet = request.form['pet']
+    adult = session.get('adult', None)
+    child = session.get('child', None)
+    senior = session.get('senior', None)
+    military = session.get('military', None)
+    pet = session.get('pet', None)
 
     cur2 = db.cursor()
     cur2.callproc('s17336team1.show_trains', [dtR, tmR, fromstationR, tostationR, adult, child, senior, military, pet])
@@ -151,7 +210,7 @@ def results_roundtrips():
     # break down of data from show_trains()
     fetchedDataR = [(r[0], r[5], r[6], r[8]) for r in cur2.fetchall()]
 
-    return render_template('results_roundtrips.html', r=fetchedDataR, toR=tostationR, fromR=fromstationR)
+    return render_template('results_roundtrips.html', r=fetchedDataR, fromR=fromstationR, toR=tostationR)
 
 # routes to the results upon query
 @app.route('/result', methods=['get', 'post'])
@@ -160,15 +219,11 @@ def result():
     session['fromstation'] = fromstation = request.form['fromstation']
     session['dt'] = dt = request.form['date']
     tm = request.form['time']
-    # tostationR = request.form['tostationR']
-    # fromstationR = request.form['fromstationR']
-    # dtR = request.form['dateR']
-    # tmR = request.form['timeR']
-    adult = request.form['adult']
-    child = request.form['child']
-    senior = request.form['senior']
-    military = request.form['military']
-    pet = request.form['pet']
+    session['adult'] = adult = request.form['adult']
+    session['child'] = child = request.form['child']
+    session['senior'] = senior = request.form['senior']
+    session['military'] = military = request.form['military']
+    session['pet'] = pet = request.form['pet']
 
     cur = db.cursor()
 
@@ -177,12 +232,6 @@ def result():
     #for train_id, departure, arrival, fare in cur.fetchall():
     #    pass
     fetchedData = [(r[0], r[5], r[6], r[8]) for r in cur.fetchall()]
-
-    # cur2 = db.cursor()
-    # cur2.callproc('s17336team1.show_trains', [dtR, tmR, fromstationR, tostationR, adult, child, senior, military, pet])
-    #
-    # # break down of data from show_trains()
-    # fetchedDataR = [(r[0], r[5], r[6], r[8]) for r in cur2.fetchall()]
 
     # m refers to object in the database to be rendered in results
     return render_template('results.html', m=fetchedData, to=tostation, fromS=fromstation, dt=dt)

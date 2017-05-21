@@ -22,60 +22,38 @@
         <br/>
         <div class="col-md-8 col-md-offset-2" style="margin-top: -20px;">
             <h3>Select Round Trip or <a href="/finish_booking">Finish Booking</a></h3>
+            <br/>
             <form action="/results_roundtrips" method="post">
                 <label>From
                     <span style="margin-left: 185px;"> To</span>
                 </label>
                 <br/>
-                <select name="fromstationR" class="form-control" style="width: 210px; float: left; margin-right: 15.5px;">
-                    {% for station_name in myStations %}
-                      <option>{{ station_name }}</option>
-                    {% endfor %}
-                </select>
-                <select name="tostationR" class="form-control" style="width: 210px; float: left;">
-                    {% for station_name in myStations %}
-                      <option>{{ station_name }}</option>
-                    {% endfor %}
-                </select>
+                <label>{{ fromR }}
+                    <span style="margin-left: 40px;">{{ toR }}</span>
+                </label>
                 <br/>
-                <label style="margin-top: 20px;">Date</label>
-                <input type="date" class="form-control" name="dateR"/>
                 <br/>
-                <label>Depart at</label>
-                <input type="time" class="form-control" name="timeR"/>
+                <label>Date
+                    <span style="margin-left: 185px;"> Depart at</span>
+                </label>
                 <br/>
-                <label style="text-align: center;">Adults
+                <input type="date" style="width: 175px; float: left;" class="form-control" name="dateR"/>
+                <span><input type="time" style="width: 175px; margin-left: 45px; margin-bottom: 15px; float: left;" class="form-control" name="timeR"/></span>
+                <br/>
+                <label style="text-align: center; margin-left: 45px;">Adults
                     <span style="margin-left: 22px;"> Children</span>
                     <span style="margin-left: 22px;">Seniors</span>
                     <span style="margin-left: 22px;">Military</span>
                     <span style="margin-left: 22px;">Pets</span>
                 </label>
                 <br/>
-                <select name="adult" class="form-control" style="width: 65px; float: left; margin-right: 8px;">
-                    {% for num in numbers %}
-                      <option>{{ num }}</option>
-                    {% endfor %}
-                </select>
-                <select  name="child" class="form-control" style="width: 65px; float: left; margin-right: 8px;">
-                    {% for num in numbers %}
-                      <option>{{ num }}</option>
-                    {% endfor %}
-                </select>
-                <select name="senior" class="form-control" style="width: 65px; float: left; margin-right: 7px;">
-                    {% for num in numbers %}
-                      <option>{{ num }}</option>
-                    {% endfor %}
-                </select>
-                <select name="military" class="form-control" style="width: 65px; float: left; margin-right: 7px;">
-                    {% for num in numbers %}
-                      <option>{{ num }}</option>
-                    {% endfor %}
-                </select>
-                <select name="pet" class="form-control" style="width: 65px; float: left; margin-right: 12px;">
-                    {% for num in numbers %}
-                      <option>{{ num }}</option>
-                    {% endfor %}
-                </select>
+                <label style="text-align: center; margin-left: 65px; margin-bottom: 15px;">{{ a }}
+                    <span style="margin-left: 65px;">{{ c }}</span>
+                    <span style="margin-left: 65px;">{{ s }}</span>
+                    <span style="margin-left: 65px;">{{ mil }}</span>
+                    <span style="margin-left: 55px;">{{ p }}</span>
+                </label>
+                <br/>
                 <div style="text-align: center;">
                     <input style="background-color: cadetblue; color: white; margin-bottom: 75px;" type="submit" class="btn btn-default" name="results_roundtrips"/>
                 </div>
