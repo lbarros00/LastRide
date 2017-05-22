@@ -214,7 +214,7 @@ def reservation_number():
     pass_id = int(get_passenger())
 
     cur = db.cursor()
-    query = 'SELECT reservations.reservation_id from S17336team1.reservations WHERE paying_passenger_id=' + str(
+    query = 'SELECT reservations.reservation_id from s17336team1.reservations WHERE paying_passenger_id=' + str(
         pass_id) + ';'
     cur.execute(query)
     reservation_id = [int(r[0]) for r in cur.fetchall()]
