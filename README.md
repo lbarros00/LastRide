@@ -50,4 +50,5 @@ Here are some problems that we encountered on the development of this applicatio
 - when trying to call show_trains procedure twice with different cursors in a function in the front end. <br/><b>Solution:</b> break it down into different templates so that we are using different functions to call show_trains procedure for round trip
 - taking into account that once you call a procedure that changes one of the tables in the database, you have to commit it in the front end in order for the table to change in the back end. <br/><b>Solution:</b> calling db.commit() after calling the create_trip_stations procedure and trip_cancel procedure as well as after inserting into passengers table
 <br/>
+
 ## Enjoy the ride!
