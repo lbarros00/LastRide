@@ -256,10 +256,18 @@ def createTrip():
     military = session.get('military', None)
     pet = session.get('pet', None)
 
+    cur = db.cursor()
+    query = 'LOCK TABLES s17336team1.seats_free WRITE;'
+    cur.execute(query)
+
     my_cur = db.cursor()
     my_cur.callproc('s17336team1.create_trip_stations', [train_idGO, dt, fromstation, tostation, adult, child, senior,
                                                       military, pet, pass_id, card_num, bill_addr, train_idBACK, dtR])
     db.commit()
+
+    cur2 = db.cursor()
+    qry = 'UNLOCK TABLES;'
+    cur2.execute(qry)
 
     return redirect(url_for('reservation_number'))
 
@@ -331,8 +339,7 @@ def result():
     cur.callproc('s17336team1.show_trains', [dt, tm, fromstation, tostation, adult, child, senior, military, pet])
 
     fetchedData = [(r[0], r[5], r[6], r[8]) for r in cur.fetchall()]
-    print child, senior
-    print (child > 0 or pet > 0) and (int(adult)==0 and int(senior)==0 and int(military)==0)
+
     if not fetchedData or (int(adult)==0 and int(senior)==0 and int(military)==0 and int(child)==0 and int(pet)==0):
         flash('Please fill out blank fields.')
         return render_template('results.html')
