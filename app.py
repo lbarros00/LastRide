@@ -256,8 +256,34 @@ def createTrip():
     military = session.get('military', None)
     pet = session.get('pet', None)
 
+    # When locking tables, our session can only access those tables
+    # which we've locked. So we have to lock every table that we
+    # read/write from in creating a trip to create a trip.
+    # To create a trip, we look at:
+    # - create trip staitons
+    #   - *stations* (at start)
+    #   - calls free_seat_check
+    #       - *seats_free* 
+    #   - calls free_seat_decrement
+    #       - *seats_free* 
+    #   - reservation: creates a reservation once coast is clear.
+    #   - *passengers:* gets passenger information.
+    #   - calls calc_full_fare:
+    #       - *fare_types:* To get rate
+    #       - calls calc_base_fare
+    #           - *segments:* To get their fares.
+    #   - *trips:* Creates trips
+
     cur = db.cursor()
-    query = 'LOCK TABLES s17336team1.seats_free WRITE;'
+    query =\
+        """LOCK TABLES {0}.seats_free WRITE,
+            {0}.stations READ,
+            {0}.passengers READ,
+            {0}.segments READ,
+            {0}.fare_types READ,
+            {0}.reservations WRITE,
+            {0}.trips WRITE;"""\
+            .format('s17336team1')
     cur.execute(query)
 
     my_cur = db.cursor()
@@ -289,10 +315,26 @@ def createonetrip():
     military = session.get('military', None)
     pet = session.get('pet', None)
 
+    lock_cursor = db.cursor()
+    lock_query =\
+        """LOCK TABLES {0}.seats_free WRITE,
+            {0}.stations READ,
+            {0}.passengers READ,
+            {0}.segments READ,
+            {0}.fare_types READ,
+            {0}.reservations WRITE,
+            {0}.trips WRITE;"""\
+            .format('s17336team1')
+    lock_cursor.execute(lock_query)
+
     my_cur = db.cursor()
     my_cur.callproc('s17336team1.create_trip_stations', [train_idGO, dt, fromstation, tostation, adult, child, senior,
                                                       military, pet, pass_id, card_num, bill_addr, None, None])
     db.commit()
+
+    unlock_query = 'UNLOCK TABLES;'
+    unlock_cursor = db.cursor()
+    unlock_cursor.execute(unlock_query)
 
     return redirect(url_for('reservation_number'))
 
